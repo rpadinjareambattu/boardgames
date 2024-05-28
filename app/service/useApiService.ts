@@ -30,7 +30,7 @@ const useApiService = <T>(url: string): ApiResponse<T> => {
         setData(response.data);
         console.log(response.data);
       } catch (error) {
-        setError(error);
+        setError(error as Error);
       } finally {
         setLoading(false);
       }
