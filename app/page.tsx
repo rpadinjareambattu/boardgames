@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { format } from "date-fns";
 import useApiService from "./service/useApiService";
 import { useEffect } from "react";
 import {
@@ -28,7 +29,10 @@ interface Item {
                     {
                       id: number;
                       attributes: {
-                        name: string;
+                        matchType: string;
+                        date: string;
+                        teamAScore: string;
+                        teamBScore: string;
                         playerA1: {
                           data: {
                             id: number;
@@ -81,6 +85,8 @@ interface Item {
                     };
                   };
                 };
+                teamAScore: number;
+                teamBScore: number;
               };
             }
           ];
@@ -97,22 +103,25 @@ export default function Home() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between pt-10">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
+          <code className="font-mono font-bold">
+            <Image
+              src="/Seidor.png"
+              alt="Vercel Logo"
+              className="dark:invert"
+              width={100}
+              height={24}
+              priority
+            />
+          </code>
         </p>
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0">
             By{" "}
             <Image
-              src="/vercel.svg"
+              src="/sraddha.png"
               alt="Vercel Logo"
               className="dark:invert"
               width={100}
@@ -134,8 +143,8 @@ export default function Home() {
                     <TableCell colSpan={2}>
                       <strong>{round.attributes.name}</strong>
                     </TableCell>
-                    <TableCell align="right">Game point</TableCell>
-                    <TableCell align="right">Match point</TableCell>
+                    <TableCell align="center">Game points</TableCell>
+                    <TableCell align="center">Match points</TableCell>
                   </TableRow>
                 </TableHead>
                 {round.attributes.matches.data.map((match) => (
@@ -146,9 +155,14 @@ export default function Home() {
                           {match.attributes.teamA.data.attributes.name} <br />
                           {match.attributes.teamB.data.attributes.name}
                         </TableCell>
-                        <TableCell align="right" className="pv6">
-                          {match.attributes.teamA.data.attributes.name} <br />
-                          {match.attributes.teamB.data.attributes.name}
+                        <TableCell align="center" className="pv6">
+                          {match.attributes.teamAScore
+                            ? match.attributes.teamAScore
+                            : "--"}{" "}
+                          <br />
+                          {match.attributes.teamBScore
+                            ? match.attributes.teamBScore
+                            : "--"}
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -163,7 +177,12 @@ export default function Home() {
                             }}
                           >
                             <TableCell component="th" scope="row">
-                              {sMatch.attributes.name}
+                              {sMatch.attributes.matchType} <br />
+                              {/* {Date(sMatch.attributes.date)} */}
+                              <FormattedDate
+                                isoDateString={sMatch.attributes.date}
+                                dateFormat="MMM dd - hh:mm a"
+                              />
                             </TableCell>
                             <TableCell>
                               {
@@ -186,12 +205,16 @@ export default function Home() {
                                   .name
                               }
                             </TableCell>
-                            <TableCell align="right">
-                              {round.attributes.name}
+                            <TableCell align="center">
+                              {sMatch.attributes.teamAScore
+                                ? sMatch.attributes.teamAScore
+                                : "--"}
+                              <br />
+                              {sMatch.attributes.teamBScore
+                                ? sMatch.attributes.teamBScore
+                                : "--"}
                             </TableCell>
-                            <TableCell align="right">
-                              {round.attributes.name}
-                            </TableCell>
+                            <TableCell align="right"></TableCell>
                           </TableRow>
                         </>
                       ))}
@@ -202,12 +225,22 @@ export default function Home() {
             ))}
           </Table>
         </TableContainer>
-        <ul>
-          {data?.data.map((item) => (
-            <li key={item.id}>{item.attributes.name}</li>
-          ))}
-        </ul>
       </div>
     </main>
   );
 }
+
+interface FormattedDateProps {
+  isoDateString: string;
+  dateFormat?: string;
+}
+
+const FormattedDate: React.FC<FormattedDateProps> = ({
+  isoDateString,
+  dateFormat = "yyyy-MM-dd HH:mm:ss",
+}) => {
+  const date = new Date(isoDateString);
+  const formattedDate = format(date, dateFormat);
+
+  return <span>{formattedDate}</span>;
+};
