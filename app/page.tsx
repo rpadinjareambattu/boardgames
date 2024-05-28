@@ -11,6 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  capitalize,
 } from "@mui/material";
 
 interface Item {
@@ -19,6 +20,7 @@ interface Item {
       id: number;
       attributes: {
         name: string;
+        gameType: string;
         matches: {
           data: [
             {
@@ -131,20 +133,27 @@ export default function Home() {
           </a>
         </div>
       </div>
-      <div>
+      <div className="my-10">
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableCell colSpan={2} className="!py-1"></TableCell>
+              <TableCell align="center" className="!py-1">
+                Game points
+              </TableCell>
+              <TableCell align="center" className="!py-1">
+                Match points
+              </TableCell>
+            </TableHead>
             {data?.data.map((round) => (
               <>
-                {/* {round.attributes.matches.data.map((match) => (
-                  <> */}
                 <TableHead>
                   <TableRow>
-                    <TableCell colSpan={2}>
+                    <TableCell colSpan={4}>
                       <strong>{round.attributes.name}</strong>
+                      {" - "}
+                      {capitalize(round.attributes.gameType)}
                     </TableCell>
-                    <TableCell align="center">Game points</TableCell>
-                    <TableCell align="center">Match points</TableCell>
                   </TableRow>
                 </TableHead>
                 {round.attributes.matches.data.map((match) => (
@@ -170,12 +179,7 @@ export default function Home() {
                       {/* {data.data.map((item) => ( */}
                       {match.attributes.sub_matches.data.map((sMatch) => (
                         <>
-                          <TableRow
-                            key={round.attributes.name}
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                            }}
-                          >
+                          <TableRow key={round.attributes.name}>
                             <TableCell component="th" scope="row">
                               {sMatch.attributes.matchType} <br />
                               {/* {Date(sMatch.attributes.date)} */}
