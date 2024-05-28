@@ -105,7 +105,7 @@ export default function Home() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between pt-10">
+    <main className="flex min-h-screen flex-col items-center pt-10">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           <code className="font-mono font-bold">
@@ -181,12 +181,13 @@ export default function Home() {
                         <>
                           <TableRow key={round.attributes.name}>
                             <TableCell component="th" scope="row">
-                              {sMatch.attributes.matchType} <br />
-                              {/* {Date(sMatch.attributes.date)} */}
-                              <FormattedDate
-                                isoDateString={sMatch.attributes.date}
-                                dateFormat="MMM dd - hh:mm a"
-                              />
+                              <small>
+                                {sMatch.attributes.matchType} <br />
+                                <FormattedDate
+                                  isoDateString={sMatch.attributes.date}
+                                  dateFormat="MMM dd - hh:mm a"
+                                />
+                              </small>
                             </TableCell>
                             <TableCell>
                               {
