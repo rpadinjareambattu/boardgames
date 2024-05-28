@@ -1,6 +1,101 @@
+"use client";
 import Image from "next/image";
+import useApiService from "./service/useApiService";
+import { useEffect } from "react";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
+interface Item {
+  data: [
+    {
+      id: number;
+      attributes: {
+        name: string;
+        matches: {
+          data: [
+            {
+              id: number;
+              attributes: {
+                sub_matches: {
+                  data: [
+                    {
+                      id: number;
+                      attributes: {
+                        name: string;
+                        playerA1: {
+                          data: {
+                            id: number;
+                            attributes: {
+                              name: string;
+                            };
+                          };
+                        };
+                        playerA2: {
+                          data: {
+                            id: number;
+                            attributes: {
+                              name: string;
+                            };
+                          };
+                        };
+                        playerB1: {
+                          data: {
+                            id: number;
+                            attributes: {
+                              name: string;
+                            };
+                          };
+                        };
+                        playerB2: {
+                          data: {
+                            id: number;
+                            attributes: {
+                              name: string;
+                            };
+                          };
+                        };
+                      };
+                    }
+                  ];
+                };
+                teamA: {
+                  data: {
+                    id: number;
+                    attributes: {
+                      name: string;
+                    };
+                  };
+                };
+                teamB: {
+                  data: {
+                    id: number;
+                    attributes: {
+                      name: string;
+                    };
+                  };
+                };
+              };
+            }
+          ];
+        };
+      };
+    }
+  ];
+}
 export default function Home() {
+  const { data, loading, error } = useApiService<Item>(
+    "rounds?populate=matches.teamA,matches.teamB,matches.sub_matches.playerA1,matches.sub_matches.playerA2,matches.sub_matches.playerB1,matches.sub_matches.playerB2"
+  );
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -27,86 +122,91 @@ export default function Home() {
           </a>
         </div>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            {data.data.map((round) => (
+              <>
+                {/* {round.attributes.matches.data.map((match) => (
+                  <> */}
+                <TableHead>
+                  <TableRow>
+                    <TableCell colSpan={2}>
+                      <strong>{round.attributes.name}</strong>
+                    </TableCell>
+                    <TableCell align="right">Game point</TableCell>
+                    <TableCell align="right">Match point</TableCell>
+                  </TableRow>
+                </TableHead>
+                {round.attributes.matches.data.map((match) => (
+                  <>
+                    <TableHead>
+                      <TableRow className="header">
+                        <TableCell colSpan={3} className="pv6">
+                          {match.attributes.teamA.data.attributes.name} <br />
+                          {match.attributes.teamB.data.attributes.name}
+                        </TableCell>
+                        <TableCell align="right" className="pv6">
+                          {match.attributes.teamA.data.attributes.name} <br />
+                          {match.attributes.teamB.data.attributes.name}
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {/* {data.data.map((item) => ( */}
+                      {match.attributes.sub_matches.data.map((sMatch) => (
+                        <>
+                          <TableRow
+                            key={round.attributes.name}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {sMatch.attributes.name}
+                            </TableCell>
+                            <TableCell>
+                              {
+                                sMatch.attributes.playerA1?.data?.attributes
+                                  .name
+                              }{" "}
+                              and{" "}
+                              {
+                                sMatch.attributes.playerA2?.data?.attributes
+                                  .name
+                              }{" "}
+                              <br />
+                              {
+                                sMatch.attributes.playerB1?.data?.attributes
+                                  .name
+                              }{" "}
+                              and{" "}
+                              {
+                                sMatch.attributes.playerB2?.data?.attributes
+                                  .name
+                              }
+                            </TableCell>
+                            <TableCell align="right">
+                              {round.attributes.name}
+                            </TableCell>
+                            <TableCell align="right">
+                              {round.attributes.name}
+                            </TableCell>
+                          </TableRow>
+                        </>
+                      ))}
+                    </TableBody>
+                  </>
+                ))}
+              </>
+            ))}
+          </Table>
+        </TableContainer>
+        <ul>
+          {data.data.map((item) => (
+            <li key={item.id}>{item.attributes.name}</li>
+          ))}
+        </ul>
       </div>
     </main>
   );

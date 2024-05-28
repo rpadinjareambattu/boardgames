@@ -31,3 +31,16 @@ body {
     text-wrap: balance;
   }
 }
+table .header{
+  background: rgb(216, 241, 249);
+}
+table .pv6{
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+table .matchName{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background: rgb(240, 250, 253);
+  text-align: center;
+}
