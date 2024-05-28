@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios, { AxiosInstance } from "axios";
 
 interface ApiResponse<T> {
-  data: T;
+  data: T | null;
   loading: boolean;
   error: Error | null;
 }
