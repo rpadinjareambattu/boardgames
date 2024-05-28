@@ -125,7 +125,7 @@ export default function Home() {
       <div>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            {data.data.map((round) => (
+            {data?.data.map((round) => (
               <>
                 {/* {round.attributes.matches.data.map((match) => (
                   <> */}
@@ -203,7 +203,7 @@ export default function Home() {
           </Table>
         </TableContainer>
         <ul>
-          {data.data.map((item) => (
+          {data?.data.map((item) => (
             <li key={item.id}>{item.attributes.name}</li>
           ))}
         </ul>
