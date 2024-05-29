@@ -147,7 +147,9 @@ export default function Home() {
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead className="thead">
-              <TableCell colSpan={2} className="!py-1"></TableCell>
+              <TableCell colSpan={2} className="!py-1">
+                <small>Fixtures and Results</small>
+              </TableCell>
               <TableCell align="center" className="!py-1">
                 <small>Game points</small>
               </TableCell>
