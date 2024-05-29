@@ -174,7 +174,7 @@ export default function Home() {
                           <span
                             className={
                               match.attributes.teamAScore === 3
-                                ? "text-green-600"
+                                ? "text-green-700"
                                 : ""
                             }
                           >
@@ -184,7 +184,7 @@ export default function Home() {
                           <span
                             className={
                               match.attributes.teamBScore === 3
-                                ? "text-green-600"
+                                ? "text-green-700"
                                 : ""
                             }
                           >
@@ -195,7 +195,7 @@ export default function Home() {
                           <span
                             className={
                               match.attributes.teamAScore === 3
-                                ? "text-green-600"
+                                ? "text-green-700"
                                 : ""
                             }
                           >
@@ -207,7 +207,7 @@ export default function Home() {
                           <span
                             className={
                               match.attributes.teamBScore === 3
-                                ? "text-green-600"
+                                ? "text-green-700"
                                 : ""
                             }
                           >
@@ -235,7 +235,7 @@ export default function Home() {
                               <span
                                 className={
                                   sMatch.attributes.teamAScore >= 2
-                                    ? "text-green-600"
+                                    ? "text-green-700"
                                     : ""
                                 }
                               >
@@ -253,7 +253,7 @@ export default function Home() {
                               <span
                                 className={
                                   sMatch.attributes.teamBScore >= 2
-                                    ? "text-green-600"
+                                    ? "text-green-700"
                                     : ""
                                 }
                               >
@@ -272,7 +272,7 @@ export default function Home() {
                               <span
                                 className={
                                   sMatch.attributes.teamAScore >= 2
-                                    ? "text-green-600"
+                                    ? "text-green-700"
                                     : ""
                                 }
                               >
@@ -285,7 +285,7 @@ export default function Home() {
                               <span
                                 className={
                                   sMatch.attributes.teamBScore >= 2
-                                    ? "text-green-600"
+                                    ? "text-green-700"
                                     : ""
                                 }
                               >
