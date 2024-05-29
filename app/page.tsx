@@ -301,6 +301,20 @@ export default function Home() {
                     </TableBody>
                   </>
                 ))}
+                {!round.attributes.matches.data.length && (
+                  <TableBody>
+                    <TableRow key={round.attributes.name}>
+                      <TableCell
+                        colSpan={4}
+                        component="th"
+                        scope="row"
+                        align="center"
+                      >
+                        TBD
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
               </>
             ))}
           </Table>
