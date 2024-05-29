@@ -170,11 +170,11 @@ export default function Home() {
                           {match.attributes.teamB.data.attributes.name}
                         </TableCell>
                         <TableCell align="center" className="pv6">
-                          {match.attributes.teamAScore
+                          {match.attributes.teamAScore != undefined
                             ? match.attributes.teamAScore
                             : "--"}{" "}
                           <br />
-                          {match.attributes.teamBScore
+                          {match.attributes.teamBScore != undefined
                             ? match.attributes.teamBScore
                             : "--"}
                         </TableCell>
@@ -216,11 +216,11 @@ export default function Home() {
                               }
                             </TableCell>
                             <TableCell align="center">
-                              {sMatch.attributes.teamAScore
+                              {sMatch.attributes.teamAScore != undefined
                                 ? sMatch.attributes.teamAScore
                                 : "--"}
                               <br />
-                              {sMatch.attributes.teamBScore
+                              {sMatch.attributes.teamBScore != undefined
                                 ? sMatch.attributes.teamBScore
                                 : "--"}
                             </TableCell>
