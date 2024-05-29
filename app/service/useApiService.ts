@@ -20,7 +20,7 @@ const useApiService = <T>(url: string): ApiResponse<T> => {
       timeout: 5000,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ffbcbc7b9b6ba6532fda4b27c2bc4736415f7debfd57edbc598f74435f19557e273e943051b8483ee61986a77632551b0e04e874a4e4142caf25c1a8c5838969748852a7eaa980ccc981d3911c38d4c81fcab91ef6a6e63c21f93fc7fb8f02dcec20652d25053e9e186671cbafb3abcfd089b62a55fc295498bf5d4f4aea4e22`,
+        Authorization: `Bearer 1c4950efa852253316960fdadff2aaf31da0a4faf7199fb9dd26b205dfc0d1dd961fdf63ccde28cea534bda4af87cc3d8ce0e3387ae8ba02270b39f287177026138cc6b213a9fa1cea91f4901d88f0b9d07bbbedac49749232276ae3a1db15dbe132b774106b7c3e44eb028384cbf060eb4b7c3f6836bb1a03cfa09bc293a7cf`,
       },
     });
 
