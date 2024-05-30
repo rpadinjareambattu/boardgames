@@ -147,32 +147,24 @@ export default function Home() {
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead className="thead">
-              <TableCell colSpan={2} className="!py-1">
+              <TableCell colSpan={4} className="!py-1">
                 <small>Fixtures and Results</small>
-              </TableCell>
-              <TableCell align="center" className="!py-1">
-                <small>Game points</small>
-              </TableCell>
-              <TableCell align="center" className="!py-1">
-                <small>Match points</small>
               </TableCell>
             </TableHead>
             {data?.data.map((round) => (
               <>
-                <TableHead>
-                  <TableRow>
-                    <TableCell colSpan={4}>
-                      <strong>{capitalize(round.attributes.gameType)}</strong>
-                      {" - "}
-                      {round.attributes.name}
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
                 {round.attributes.matches.data.map((match) => (
                   <>
                     <TableHead>
                       <TableRow className="header">
-                        <TableCell colSpan={3} className="pv6">
+                        <TableCell>
+                          <strong>
+                            {capitalize(round.attributes.gameType)}
+                          </strong>
+                          {" - "}
+                          {round.attributes.name}
+                        </TableCell>
+                        <TableCell className="pv6" align="right">
                           <span
                             className={
                               match.attributes.teamAScore === 3
@@ -181,8 +173,34 @@ export default function Home() {
                             }
                           >
                             {match.attributes.teamA.data.attributes.name}
-                          </span>{" "}
-                          <br />
+                          </span>
+                        </TableCell>
+                        <TableCell className="pv6" align="center">
+                          <span
+                            className={
+                              match.attributes.teamAScore === 3
+                                ? "text-green-700"
+                                : ""
+                            }
+                          >
+                            {match.attributes.teamAScore != undefined
+                              ? match.attributes.teamAScore
+                              : "-"}{" "}
+                          </span>
+                          {" - "}
+                          <span
+                            className={
+                              match.attributes.teamBScore === 3
+                                ? "text-green-700"
+                                : ""
+                            }
+                          >
+                            {match.attributes.teamBScore != undefined
+                              ? match.attributes.teamBScore
+                              : "-"}
+                          </span>
+                        </TableCell>
+                        <TableCell className="pv6" align="left">
                           <span
                             className={
                               match.attributes.teamBScore === 3
@@ -193,39 +211,19 @@ export default function Home() {
                             {match.attributes.teamB.data.attributes.name}
                           </span>
                         </TableCell>
-                        <TableCell align="center" className="pv6">
-                          <span
-                            className={
-                              match.attributes.teamAScore === 3
-                                ? "text-green-700"
-                                : ""
-                            }
-                          >
-                            {match.attributes.teamAScore != undefined
-                              ? match.attributes.teamAScore
-                              : "--"}{" "}
-                          </span>
-                          <br />
-                          <span
-                            className={
-                              match.attributes.teamBScore === 3
-                                ? "text-green-700"
-                                : ""
-                            }
-                          >
-                            {match.attributes.teamBScore != undefined
-                              ? match.attributes.teamBScore
-                              : "--"}
-                          </span>
-                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {match.attributes.sub_matches.data.map((sMatch) => (
                         <>
                           <TableRow key={round.attributes.name}>
-                            <TableCell component="th" scope="row">
-                              <small>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              className="!py-2 !pr-0"
+                              align="right"
+                            >
+                              <small className="border-r-2 block pr-4">
                                 {sMatch.attributes.matchType} <br />
                                 <FormattedDate
                                   isoDateString={sMatch.attributes.date}
@@ -233,7 +231,7 @@ export default function Home() {
                                 />
                               </small>
                             </TableCell>
-                            <TableCell>
+                            <TableCell align="right">
                               <span
                                 className={
                                   sMatch.attributes.teamAScore >= 2
@@ -251,7 +249,34 @@ export default function Home() {
                                     .name
                                 }{" "}
                               </span>
-                              <br />
+                              {/* <br /> */}
+                            </TableCell>
+                            <TableCell align="center">
+                              <span
+                                className={
+                                  sMatch.attributes.teamAScore >= 2
+                                    ? "text-green-700"
+                                    : ""
+                                }
+                              >
+                                {sMatch.attributes.teamAScore != undefined
+                                  ? sMatch.attributes.teamAScore
+                                  : "--"}
+                              </span>
+                              {" - "}
+                              <span
+                                className={
+                                  sMatch.attributes.teamBScore >= 2
+                                    ? "text-green-700"
+                                    : ""
+                                }
+                              >
+                                {sMatch.attributes.teamBScore != undefined
+                                  ? sMatch.attributes.teamBScore
+                                  : "--"}
+                              </span>
+                            </TableCell>
+                            <TableCell align="left">
                               <span
                                 className={
                                   sMatch.attributes.teamBScore >= 2
@@ -270,33 +295,6 @@ export default function Home() {
                                 }
                               </span>
                             </TableCell>
-                            <TableCell align="center">
-                              <span
-                                className={
-                                  sMatch.attributes.teamAScore >= 2
-                                    ? "text-green-700"
-                                    : ""
-                                }
-                              >
-                                {sMatch.attributes.teamAScore != undefined
-                                  ? sMatch.attributes.teamAScore
-                                  : "--"}
-                              </span>
-                              <br />
-
-                              <span
-                                className={
-                                  sMatch.attributes.teamBScore >= 2
-                                    ? "text-green-700"
-                                    : ""
-                                }
-                              >
-                                {sMatch.attributes.teamBScore != undefined
-                                  ? sMatch.attributes.teamBScore
-                                  : "--"}
-                              </span>
-                            </TableCell>
-                            <TableCell align="right"></TableCell>
                           </TableRow>
                         </>
                       ))}
