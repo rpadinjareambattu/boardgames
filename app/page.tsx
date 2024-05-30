@@ -151,180 +151,186 @@ export default function Home() {
                 <small>Fixtures and Results</small>
               </TableCell>
             </TableHead>
-            {data?.data.map((round) => (
-              <>
-                {round.attributes.matches.data.map((match) => (
-                  <>
-                    <TableHead>
-                      <TableRow className="header">
-                        <TableCell>
+            {data?.data
+              .sort((a, b) =>
+                b.attributes.name.localeCompare(a.attributes.name)
+              )
+              .map((round) => (
+                <>
+                  {round.attributes.matches.data.map((match) => (
+                    <>
+                      <TableHead>
+                        <TableRow className="header">
+                          <TableCell>
+                            <strong>
+                              {capitalize(round.attributes.gameType)}
+                            </strong>
+                            {" - "}
+                            {round.attributes.name}
+                          </TableCell>
+                          <TableCell className="pv6" align="right">
+                            <span
+                              className={
+                                match.attributes.teamAScore === 3
+                                  ? "text-green-700"
+                                  : ""
+                              }
+                            >
+                              {match.attributes.teamA.data.attributes.name}
+                            </span>
+                          </TableCell>
+                          <TableCell className="pv6" align="center">
+                            <span
+                              className={
+                                match.attributes.teamAScore === 3
+                                  ? "text-green-700"
+                                  : ""
+                              }
+                            >
+                              {match.attributes.teamAScore != undefined
+                                ? match.attributes.teamAScore
+                                : "-"}{" "}
+                            </span>
+                            {" - "}
+                            <span
+                              className={
+                                match.attributes.teamBScore === 3
+                                  ? "text-green-700"
+                                  : ""
+                              }
+                            >
+                              {match.attributes.teamBScore != undefined
+                                ? match.attributes.teamBScore
+                                : "-"}
+                            </span>
+                          </TableCell>
+                          <TableCell className="pv6" align="left">
+                            <span
+                              className={
+                                match.attributes.teamBScore === 3
+                                  ? "text-green-700"
+                                  : ""
+                              }
+                            >
+                              {match.attributes.teamB.data.attributes.name}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {match.attributes.sub_matches.data
+                          .sort(
+                            (a, b) =>
+                              new Date(b.attributes.date).getTime() -
+                              new Date(a.attributes.date).getTime()
+                          )
+                          .map((sMatch) => (
+                            <>
+                              <TableRow key={round.attributes.name}>
+                                <TableCell
+                                  component="th"
+                                  scope="row"
+                                  className="!py-2 !pr-0"
+                                  align="right"
+                                >
+                                  <small className="border-r-2 block pr-4">
+                                    {sMatch.attributes.matchType} <br />
+                                    <FormattedDate
+                                      isoDateString={sMatch.attributes.date}
+                                      dateFormat="MMM dd - hh:mm a"
+                                    />
+                                  </small>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <span
+                                    className={
+                                      sMatch.attributes.teamAScore >= 2
+                                        ? "text-green-700"
+                                        : ""
+                                    }
+                                  >
+                                    {
+                                      sMatch.attributes.playerA1?.data
+                                        ?.attributes.name
+                                    }{" "}
+                                    and{" "}
+                                    {
+                                      sMatch.attributes.playerA2?.data
+                                        ?.attributes.name
+                                    }{" "}
+                                  </span>
+                                  {/* <br /> */}
+                                </TableCell>
+                                <TableCell align="center">
+                                  <span
+                                    className={
+                                      sMatch.attributes.teamAScore >= 2
+                                        ? "text-green-700"
+                                        : ""
+                                    }
+                                  >
+                                    {sMatch.attributes.teamAScore != undefined
+                                      ? sMatch.attributes.teamAScore
+                                      : "--"}
+                                  </span>
+                                  {" - "}
+                                  <span
+                                    className={
+                                      sMatch.attributes.teamBScore >= 2
+                                        ? "text-green-700"
+                                        : ""
+                                    }
+                                  >
+                                    {sMatch.attributes.teamBScore != undefined
+                                      ? sMatch.attributes.teamBScore
+                                      : "--"}
+                                  </span>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <span
+                                    className={
+                                      sMatch.attributes.teamBScore >= 2
+                                        ? "text-green-700"
+                                        : ""
+                                    }
+                                  >
+                                    {
+                                      sMatch.attributes.playerB1?.data
+                                        ?.attributes.name
+                                    }{" "}
+                                    and{" "}
+                                    {
+                                      sMatch.attributes.playerB2?.data
+                                        ?.attributes.name
+                                    }
+                                  </span>
+                                </TableCell>
+                              </TableRow>
+                            </>
+                          ))}
+                      </TableBody>
+                    </>
+                  ))}
+                  {!round.attributes.matches.data.length && (
+                    <TableBody className="header">
+                      <TableRow key={round.attributes.name}>
+                        <TableCell
+                          colSpan={4}
+                          component="th"
+                          scope="row"
+                          align="center"
+                        >
                           <strong>
                             {capitalize(round.attributes.gameType)}
                           </strong>
                           {" - "}
-                          {round.attributes.name}
-                        </TableCell>
-                        <TableCell className="pv6" align="right">
-                          <span
-                            className={
-                              match.attributes.teamAScore === 3
-                                ? "text-green-700"
-                                : ""
-                            }
-                          >
-                            {match.attributes.teamA.data.attributes.name}
-                          </span>
-                        </TableCell>
-                        <TableCell className="pv6" align="center">
-                          <span
-                            className={
-                              match.attributes.teamAScore === 3
-                                ? "text-green-700"
-                                : ""
-                            }
-                          >
-                            {match.attributes.teamAScore != undefined
-                              ? match.attributes.teamAScore
-                              : "-"}{" "}
-                          </span>
-                          {" - "}
-                          <span
-                            className={
-                              match.attributes.teamBScore === 3
-                                ? "text-green-700"
-                                : ""
-                            }
-                          >
-                            {match.attributes.teamBScore != undefined
-                              ? match.attributes.teamBScore
-                              : "-"}
-                          </span>
-                        </TableCell>
-                        <TableCell className="pv6" align="left">
-                          <span
-                            className={
-                              match.attributes.teamBScore === 3
-                                ? "text-green-700"
-                                : ""
-                            }
-                          >
-                            {match.attributes.teamB.data.attributes.name}
-                          </span>
+                          {round.attributes.name} {" - TBD"}
                         </TableCell>
                       </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {match.attributes.sub_matches.data
-                        .sort(
-                          (a, b) =>
-                            new Date(b.attributes.date).getTime() -
-                            new Date(a.attributes.date).getTime()
-                        )
-                        .map((sMatch) => (
-                          <>
-                            <TableRow key={round.attributes.name}>
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                className="!py-2 !pr-0"
-                                align="right"
-                              >
-                                <small className="border-r-2 block pr-4">
-                                  {sMatch.attributes.matchType} <br />
-                                  <FormattedDate
-                                    isoDateString={sMatch.attributes.date}
-                                    dateFormat="MMM dd - hh:mm a"
-                                  />
-                                </small>
-                              </TableCell>
-                              <TableCell align="right">
-                                <span
-                                  className={
-                                    sMatch.attributes.teamAScore >= 2
-                                      ? "text-green-700"
-                                      : ""
-                                  }
-                                >
-                                  {
-                                    sMatch.attributes.playerA1?.data?.attributes
-                                      .name
-                                  }{" "}
-                                  and{" "}
-                                  {
-                                    sMatch.attributes.playerA2?.data?.attributes
-                                      .name
-                                  }{" "}
-                                </span>
-                                {/* <br /> */}
-                              </TableCell>
-                              <TableCell align="center">
-                                <span
-                                  className={
-                                    sMatch.attributes.teamAScore >= 2
-                                      ? "text-green-700"
-                                      : ""
-                                  }
-                                >
-                                  {sMatch.attributes.teamAScore != undefined
-                                    ? sMatch.attributes.teamAScore
-                                    : "--"}
-                                </span>
-                                {" - "}
-                                <span
-                                  className={
-                                    sMatch.attributes.teamBScore >= 2
-                                      ? "text-green-700"
-                                      : ""
-                                  }
-                                >
-                                  {sMatch.attributes.teamBScore != undefined
-                                    ? sMatch.attributes.teamBScore
-                                    : "--"}
-                                </span>
-                              </TableCell>
-                              <TableCell align="left">
-                                <span
-                                  className={
-                                    sMatch.attributes.teamBScore >= 2
-                                      ? "text-green-700"
-                                      : ""
-                                  }
-                                >
-                                  {
-                                    sMatch.attributes.playerB1?.data?.attributes
-                                      .name
-                                  }{" "}
-                                  and{" "}
-                                  {
-                                    sMatch.attributes.playerB2?.data?.attributes
-                                      .name
-                                  }
-                                </span>
-                              </TableCell>
-                            </TableRow>
-                          </>
-                        ))}
                     </TableBody>
-                  </>
-                ))}
-                {!round.attributes.matches.data.length && (
-                  <TableBody className="header">
-                    <TableRow key={round.attributes.name}>
-                      <TableCell
-                        colSpan={4}
-                        component="th"
-                        scope="row"
-                        align="center"
-                      >
-                        <strong>{capitalize(round.attributes.gameType)}</strong>
-                        {" - "}
-                        {round.attributes.name} {" - TBD"}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </>
-            ))}
+                  )}
+                </>
+              ))}
           </Table>
         </TableContainer>
       </div>
