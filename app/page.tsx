@@ -308,7 +308,7 @@ export default function Home() {
                   </>
                 ))}
                 {!round.attributes.matches.data.length && (
-                  <TableBody>
+                  <TableBody className="header">
                     <TableRow key={round.attributes.name}>
                       <TableCell
                         colSpan={4}
@@ -316,7 +316,9 @@ export default function Home() {
                         scope="row"
                         align="center"
                       >
-                        TBD
+                        <strong>{capitalize(round.attributes.gameType)}</strong>
+                        {" - "}
+                        {round.attributes.name} {" - TBD"}
                       </TableCell>
                     </TableRow>
                   </TableBody>
