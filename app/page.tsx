@@ -145,7 +145,13 @@ export default function Home() {
       </div>
       <div className="my-14">
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table
+            sx={{
+              width: { xs: "300px",  md: "800px" },
+              marginBottom: { xs: "60px", md: 0 },
+            }}
+            aria-label="simple table"
+          >
             <TableHead className="thead">
               <TableCell colSpan={4} className="!py-1">
                 <small>Fixtures and Results</small>
@@ -168,7 +174,7 @@ export default function Home() {
                             {" - "}
                             {round.attributes.name}
                           </TableCell>
-                          <TableCell className="pv6" align="right">
+                          <TableCell align="right">
                             <span
                               className={
                                 match.attributes.teamAScore === 3
@@ -179,7 +185,7 @@ export default function Home() {
                               {match.attributes.teamA.data.attributes.name}
                             </span>
                           </TableCell>
-                          <TableCell className="pv6" align="center">
+                          <TableCell align="center">
                             <span
                               className={
                                 match.attributes.teamAScore === 3
@@ -241,7 +247,7 @@ export default function Home() {
                                     />
                                   </small>
                                 </TableCell>
-                                <TableCell align="right">
+                                <TableCell align="right" sx={{ padding: {xs: 1, sm: 2}}}>
                                   <span
                                     className={
                                       sMatch.attributes.teamAScore >= 2
@@ -261,7 +267,10 @@ export default function Home() {
                                   </span>
                                   {/* <br /> */}
                                 </TableCell>
-                                <TableCell align="center">
+                                <TableCell
+                                  sx={{ minWidth: "65px" }}
+                                  align="center"
+                                >
                                   <span
                                     className={
                                       sMatch.attributes.teamAScore >= 2
@@ -286,7 +295,7 @@ export default function Home() {
                                       : "--"}
                                   </span>
                                 </TableCell>
-                                <TableCell align="left">
+                                <TableCell align="left" sx={{ padding: {xs: 1, sm: 2}}}>
                                   <span
                                     className={
                                       sMatch.attributes.teamBScore >= 2
