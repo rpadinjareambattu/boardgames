@@ -165,14 +165,14 @@ export default function Page() {
                           <>
                             <TableHead>
                               <TableRow className="header">
-                                <TableCell>
+                                <TableCell className="!py-1">
                                   <strong>
                                     {capitalize(round.attributes.gameType)}
                                   </strong>
                                   {" - "}
                                   {round.attributes.name}
                                 </TableCell>
-                                <TableCell align="right">
+                                <TableCell className="!py-1" align="right">
                                   <span
                                     className={
                                       match.attributes.teamAScore === 3
@@ -186,7 +186,7 @@ export default function Page() {
                                     }
                                   </span>
                                 </TableCell>
-                                <TableCell align="center">
+                                <TableCell className="!py-1" align="center">
                                   <span
                                     className={
                                       match.attributes.teamAScore === 3
@@ -211,7 +211,7 @@ export default function Page() {
                                       : "-"}
                                   </span>
                                 </TableCell>
-                                <TableCell className="pv6" align="left">
+                                <TableCell className="pv6 !py-1" align="left">
                                   <span
                                     className={
                                       match.attributes.teamBScore === 3
