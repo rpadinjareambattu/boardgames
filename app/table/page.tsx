@@ -62,8 +62,7 @@ interface Team {
       id: number;
       attributes: {
         name: string;
-        aPoints: number;
-        bPoints: number;
+        points: number;
       };
     }
   ];
@@ -72,22 +71,23 @@ interface TableData {
   id: number;
   name: string;
   points: number;
+  played: number;
 }
 export default function About() {
-  const [tableData, setTableData] = useState<TableData[] | null>([]);
+  const [tableData, setTableData] = useState<TableData[]>([]);
   const { data, loading, error } = useApiService<Item>(
     "rounds?populate=matches.teamA,matches.teamB,"
   );
-  const { data: tData } = useApiService<Team>("teams");
+  const { data: tData, loading: tLoading } = useApiService<Team>("teams");
   useEffect(() => {
-    if (!tData) return;
-    if (!tableData?.length) {
-      const dd: TableData[] | any = [];
+    if (!loading && !tLoading && data && tData) {
+      const dd: TableData[] = [];
       tData.data.map(({ id, attributes }) => {
         const tt: TableData = {
           id,
           name: attributes.name,
-          points: 0,
+          points: calcPoints(id),
+          played: calcPlayed(id),
         };
         dd.push(tt);
       });
@@ -95,24 +95,39 @@ export default function About() {
     }
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tData]);
-  useEffect(() => {
-    if (!tableData?.length) return;
+  }, [tLoading, loading]);
+  const calcPoints = (id: number) => {
+    let p = 0;
     data?.data.map((round) => {
       round.attributes.matches.data.map((match) => {
-        tableData.map((sDate) => {
-          if (match.attributes.teamA.data.id === sDate.id) {
-            sDate.points += match.attributes?.teamAScore;
-          }
-          if (match.attributes.teamB.data.id === sDate.id) {
-            sDate.points += match.attributes?.teamBScore;
-          }
-        });
+        if (match.attributes.teamA.data.id === id) {
+          p += match.attributes?.teamAScore;
+        }
+        if (match.attributes.teamB.data.id === id) {
+          p += match.attributes?.teamBScore;
+        }
       });
     });
-    return () => {};
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableData, data]);
+    return p;
+  };
+  const calcPlayed = (id: number) => {
+    let p = 0;
+    data?.data.map((round) => {
+      round.attributes.matches.data.map((match) => {
+        if (match.attributes.teamA.data.id === id) {
+          if (match.attributes?.teamAScore != undefined) {
+            p++;
+          }
+        }
+        if (match.attributes.teamB.data.id === id) {
+          if (match.attributes?.teamBScore != undefined) {
+            p++;
+          }
+        }
+      });
+    });
+    return p;
+  };
   if (loading)
     return (
       <div className="min-h-screen justify-center items-center flex">
@@ -139,7 +154,10 @@ export default function About() {
               <TableCell className="!py-1">
                 <small>Team</small>
               </TableCell>
-              <TableCell className="!py-1" align="right">
+              <TableCell className="!py-1" align="center">
+                <small>Played</small>
+              </TableCell>
+              <TableCell className="!py-1" align="center">
                 <small>Points</small>
               </TableCell>
             </TableHead>
@@ -156,7 +174,16 @@ export default function About() {
                         component="th"
                         scope="row"
                         className="!py-2"
-                        align="right"
+                        align="center"
+                      >
+                        {team.played}
+                        {"/5"}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="!py-2"
+                        align="center"
                       >
                         {team.points}
                       </TableCell>
