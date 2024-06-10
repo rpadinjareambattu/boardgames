@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { format } from "date-fns";
 import {
   CircularProgress,
@@ -10,11 +9,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  capitalize,
 } from "@mui/material";
-import Filter from "../filter";
-import { useSearchParams } from "next/navigation";
-import Header from "../header";
 import useApiService from "../service/useApiService";
 import { useEffect, useState } from "react";
 
