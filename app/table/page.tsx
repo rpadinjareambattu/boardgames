@@ -146,6 +146,9 @@ export default function About() {
             aria-label="simple table"
           >
             <TableHead className="thead">
+              <TableCell className="!py-1 !max-w-10 w-5">
+                <small>#</small>
+              </TableCell>
               <TableCell className="!py-1">
                 <small>Team</small>
               </TableCell>
@@ -159,9 +162,16 @@ export default function About() {
             <TableBody>
               {tableData
                 ?.sort((a, b) => b.points - a.points)
-                .map((team) => {
+                .map((team, i) => {
                   return (
                     <TableRow key={team.id}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="!py-2 !max-w-10"
+                      >
+                        {i + 1}
+                      </TableCell>
                       <TableCell component="th" scope="row" className="!py-2">
                         {team.name}
                       </TableCell>
