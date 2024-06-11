@@ -204,18 +204,3 @@ export default function About() {
     </main>
   );
 }
-
-interface FormattedDateProps {
-  isoDateString: string;
-  dateFormat?: string;
-}
-
-const FormattedDate: React.FC<FormattedDateProps> = ({
-  isoDateString,
-  dateFormat = "yyyy-MM-dd HH:mm:ss",
-}) => {
-  const date = new Date(isoDateString);
-  const formattedDate = format(date, dateFormat);
-
-  return <span>{formattedDate ? formattedDate : "TBD"}</span>;
-};

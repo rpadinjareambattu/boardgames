@@ -446,8 +446,8 @@ const FormattedDate: React.FC<FormattedDateProps> = ({
   isoDateString,
   dateFormat = "yyyy-MM-dd HH:mm:ss",
 }) => {
+  if (isoDateString === null) return <span>TBD</span>;
   const date = new Date(isoDateString);
   const formattedDate = format(date, dateFormat);
-
-  return <span>{formattedDate ? formattedDate : "TBD"}</span>;
+  return <span>{formattedDate}</span>;
 };
