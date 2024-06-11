@@ -7,13 +7,20 @@ interface ApiResponse<T> {
   error: Error | null;
 }
 
-const useApiService = <T>(url: string): ApiResponse<T> => {
+const useApiService = <T>(
+  url: string,
+  shouldFetch: boolean = true
+): ApiResponse<T> => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const token = process.env.REACT_APP_BEARER_TOKEN;
+    if (!shouldFetch) {
+      setLoading(false);
+      return;
+    }
 
     const apiService: AxiosInstance = axios.create({
       baseURL: "https://otboardgames.azurewebsites.net/api/",
@@ -26,9 +33,9 @@ const useApiService = <T>(url: string): ApiResponse<T> => {
 
     const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await apiService.get<T>(url);
         setData(response.data);
-        console.log(response.data);
       } catch (error) {
         setError(error as Error);
       } finally {
@@ -37,7 +44,7 @@ const useApiService = <T>(url: string): ApiResponse<T> => {
     };
 
     fetchData();
-  }, [url]);
+  }, [shouldFetch, url]);
 
   return { data, loading, error };
 };

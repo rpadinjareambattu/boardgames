@@ -146,18 +146,20 @@ export default function About() {
             aria-label="simple table"
           >
             <TableHead className="thead">
-              <TableCell className="!py-1 !max-w-10 w-5">
-                <small>#</small>
-              </TableCell>
-              <TableCell className="!py-1">
-                <small>Team</small>
-              </TableCell>
-              <TableCell className="!py-1" align="center">
-                <small>Played</small>
-              </TableCell>
-              <TableCell className="!py-1" align="center">
-                <small>Points</small>
-              </TableCell>
+              <TableRow>
+                <TableCell className="!py-1 !max-w-10 w-5">
+                  <small>#</small>
+                </TableCell>
+                <TableCell className="!py-1">
+                  <small>Team</small>
+                </TableCell>
+                <TableCell className="!py-1" align="center">
+                  <small>Played</small>
+                </TableCell>
+                <TableCell className="!py-1" align="center">
+                  <small>Points</small>
+                </TableCell>
+              </TableRow>
             </TableHead>
             <TableBody>
               {tableData
