@@ -181,12 +181,13 @@ export default function Page() {
           </div>
         </div>
 
-        <TableContainer component={Paper}>
+        <TableContainer className="justify-center flex">
           <Table
             sx={{
               width: { xs: "300px", md: "800px" },
             }}
             aria-label="simple table"
+            className="bg-white shadow-lg shadow-black rounded-sm"
           >
             <TableHead className="thead">
               {data && !loading && (

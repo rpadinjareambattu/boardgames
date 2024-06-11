@@ -141,7 +141,6 @@ export default function About() {
           <Table
             sx={{
               width: { xs: "300px", md: "800px" },
-              marginBottom: { xs: "60px", md: 0 },
             }}
             aria-label="simple table"
           >
