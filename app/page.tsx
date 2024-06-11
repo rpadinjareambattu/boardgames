@@ -156,20 +156,20 @@ export default function Page() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center">
+    <main className="flex min-h-screen flex-col items-center max-md:px-4">
       <div className="mb-14">
         <div className="flex flex-wrap">
-          <code className="font-mono font-bold from-zinc-200 pb-4 pt-8 flex-1">
+          <code className="font-mono font-bold from-zinc-200 pb-4 pt-8 flex-1 max-md:col">
             Board Game Bonanza Season 2
           </code>
-          <div className="md:flex-none flex items-center max-md:flex-1">
+          <div className="md:flex-none flex items-center max-md:flex-initial max-md:w-1/3">
             {!gameListLoading && (
               <select
                 onChange={handleChange}
                 ref={gameInput}
                 name="team"
                 defaultValue={game}
-                className="bg-gray-50 capitalize border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 capitalize border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 {gameList?.data.map((t) => (
                   <option key={t.id} value={t.attributes.name}>
