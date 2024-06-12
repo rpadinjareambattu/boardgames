@@ -8,40 +8,73 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import useApiService from "./service/useApiService";
+import { useEffect, useCallback } from "react";
 
 const pages = ["matches", "table"];
-
+interface GameList {
+  data: [
+    {
+      id: number;
+      attributes: {
+        name: string;
+        isActive: boolean;
+      };
+    }
+  ];
+}
 function Header() {
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const { data: gameList, loading: gameListLoading } =
+    useApiService<GameList>("games");
+  useEffect(() => {
+    if (!gameList?.data?.length) return;
+    localStorage.gameList = JSON.stringify(gameList);
+    gameList?.data.forEach((element) => {
+      if (element.attributes.isActive) {
+        localStorage.activeGame = element.attributes.name;
+      }
+    });
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameList]);
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  useEffect(() => {
+    const activeGame = localStorage.activeGame;
+    if (activeGame)
+      router.push(pathname + "?" + createQueryString("game", activeGame));
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AppBar position="sticky" color="inherit">
