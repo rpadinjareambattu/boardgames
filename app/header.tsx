@@ -48,10 +48,10 @@ function Header() {
     useApiService<GameList>("games");
   useEffect(() => {
     if (!gameList?.data?.length) return;
-    localStorage.gameList = JSON.stringify(gameList);
+    window.localStorage.setItem("gameList", JSON.stringify(gameList));
     gameList?.data.forEach((element) => {
       if (element.attributes.isActive) {
-        localStorage.activeGame = element.attributes.name;
+        window.localStorage.setItem("activeGame", element.attributes.name);
       }
     });
     return () => {};
@@ -67,11 +67,15 @@ function Header() {
     },
     [searchParams]
   );
-
+  let activeGame = "";
+  if (typeof window !== "undefined") {
+    activeGame = window.localStorage.getItem("activeGame") || "";
+  }
   useEffect(() => {
-    const activeGame = localStorage.activeGame;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    activeGame = window.localStorage.getItem("activeGame") || "";
     if (activeGame)
-      router.push(pathname + "?" + createQueryString("game", activeGame));
+      router.push(pathname + "?" + createQueryString("game", activeGame || ""));
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -80,7 +84,7 @@ function Header() {
     <AppBar position="sticky" color="inherit">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Link href={"/"}>
+          <Link href={"/" + "?" + createQueryString("game", activeGame)}>
             <Image
               src="/Seidor.png"
               alt="Vercel Logo"
@@ -121,7 +125,10 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <Link href={page} key={page}>
+                <Link
+                  href={page + "?" + createQueryString("game", activeGame)}
+                  key={page}
+                >
                   <MenuItem
                     onClick={handleCloseNavMenu}
                     color="primary"
@@ -146,7 +153,10 @@ function Header() {
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Link href={page} key={page}>
+              <Link
+                href={page + "?" + createQueryString("game", activeGame)}
+                key={page}
+              >
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, display: "block" }}

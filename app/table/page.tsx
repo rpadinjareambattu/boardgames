@@ -11,7 +11,8 @@ import {
   TableRow,
 } from "@mui/material";
 import useApiService from "../service/useApiService";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface Item {
   data: [
@@ -68,12 +69,44 @@ interface TableData {
   points: number;
   played: number;
 }
+interface GameList {
+  data: [
+    {
+      id: number;
+      attributes: {
+        name: string;
+        isActive: boolean;
+      };
+    }
+  ];
+}
+interface GameTypes {
+  chess: number;
+  ludo: number;
+  carroms: number;
+  snakeAndLadder: number;
+}
 export default function About() {
+  const searchParams = useSearchParams();
+  let game = searchParams.get("game") || "";
+  const router = useRouter();
+  const pathname = usePathname();
+  const gameInput = useRef<HTMLSelectElement>(null);
   const [tableData, setTableData] = useState<TableData[]>([]);
+  const played: GameTypes = {
+    chess: 3,
+    ludo: 3,
+    carroms: 5,
+    snakeAndLadder: 5,
+  };
   const { data, loading, error } = useApiService<Item>(
-    "rounds?populate=matches.teamA,matches.teamB,"
+    "rounds?populate=matches.teamA,matches.teamB&filters[gameType][$eq]=" +
+      game,
+    game != ""
   );
   const { data: tData, loading: tLoading } = useApiService<Team>("teams");
+  const { data: gameList, loading: gameListLoading } =
+    useApiService<GameList>("games");
   useEffect(() => {
     if (!loading && !tLoading && data && tData) {
       const dd: TableData[] = [];
@@ -123,6 +156,19 @@ export default function About() {
     });
     return p;
   };
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const gameType = event.target.value;
+    router.push(pathname + "?" + createQueryString("game", gameType));
+  };
   if (loading)
     return (
       <div className="min-h-screen justify-center items-center flex">
@@ -134,9 +180,28 @@ export default function About() {
   return (
     <main className="flex min-h-screen flex-col items-center">
       <div>
-        <code className="font-mono font-bold from-zinc-200 pb-4 pt-8 block">
-          Board Game Bonanza Season 2
-        </code>
+        <div className="flex flex-wrap">
+          <code className="font-mono font-bold from-zinc-200 flex-1 content-center max-md:col my-6">
+            Board Game Bonanza Season 2
+          </code>
+          <div className="md:flex-none flex items-center max-md:flex-initial max-md:w-1/3 pl-2">
+            {!gameListLoading && (
+              <select
+                onChange={handleChange}
+                ref={gameInput}
+                name="team"
+                defaultValue={game}
+                className="bg-gray-50 capitalize border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                {gameList?.data.map((t) => (
+                  <option key={t.id} value={t.attributes.name}>
+                    {t.attributes.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+        </div>
         <TableContainer component={Paper}>
           <Table
             sx={{
@@ -183,7 +248,8 @@ export default function About() {
                         align="center"
                       >
                         {team.played}
-                        {"/5"}
+                        {"/"}
+                        {(played as any)[game]}
                       </TableCell>
                       <TableCell
                         component="th"

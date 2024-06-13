@@ -161,13 +161,13 @@ export default function Page() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center max-md:px-4">
+    <main className="flex min-h-screen flex-col items-center max-md:px-4 max-md:text-sm">
       <div className="mb-14">
         <div className="flex flex-wrap">
-          <code className="font-mono font-bold from-zinc-200 pb-4 pt-8 flex-1 max-md:col">
+          <code className="font-mono font-bold from-zinc-200 flex-1 content-center max-md:col my-6">
             Board Game Bonanza Season 2
           </code>
-          <div className="md:flex-none flex items-center max-md:flex-initial max-md:w-1/3">
+          <div className="md:flex-none flex items-center max-md:flex-initial max-md:w-1/3 pl-2">
             {!gameListLoading && (
               <select
                 onChange={handleChange}
