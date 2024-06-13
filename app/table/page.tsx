@@ -202,10 +202,10 @@ export default function About() {
             )}
           </div>
         </div>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className="justify-center flex">
           <Table
             sx={{
-              width: { xs: "300px", md: "800px" },
+              width: { xs: "100%", md: "800px" },
             }}
             aria-label="simple table"
           >
