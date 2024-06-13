@@ -178,7 +178,7 @@ export default function About() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center">
+    <main className="flex min-h-screen flex-col items-center  max-md:px-4 max-md:text-sm">
       <div>
         <div className="flex flex-wrap">
           <code className="font-mono font-bold from-zinc-200 flex-1 content-center max-md:col my-6">
