@@ -174,7 +174,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                         item.attributes.date
                                       ).toDateString();
                                       const filterDateStr = new Date(
-                                        date
+                                        String(date)
                                       ).toDateString();
                                       return itemDate === filterDateStr;
                                     })

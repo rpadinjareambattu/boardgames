@@ -249,7 +249,7 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
                           >
                             {team.played}
                             {"/"}
-                            {(played as any)[game]}
+                            {(played as any)[String(game)]}
                           </TableCell>
                           <TableCell
                             component="th"
