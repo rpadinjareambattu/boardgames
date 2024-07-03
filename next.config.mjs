@@ -1,17 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    async redirects() {
-        return [
-          // Basic redirect
-          {
-            source: '/matches',
-            destination: '/',
-            permanent: true,
-          },
-        ]
-      },
       experimental: {
         missingSuspenseWithCSRBailout: false,
+      },
+      images: {
+        remotePatterns: [
+          {
+            protocol: 'https',
+            hostname: 'otboardgames.azurewebsites.net',
+            port: '',
+            pathname: '/uploads/**',
+          },
+        ],
       },
 };
 

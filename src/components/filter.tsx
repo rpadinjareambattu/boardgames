@@ -1,14 +1,12 @@
 "use client";
 
+import useApiService from "@/service/useApiService";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-
-import { useRouter } from "next/navigation";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 import { useState, useEffect, FormEvent, useRef } from "react";
 import { FaFilter } from "react-icons/fa";
-import useApiService from "./service/useApiService";
 
 const style = {
   position: "absolute" as "absolute",
@@ -37,21 +35,26 @@ export default function Filter() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const router = useRouter();
-
-  let date = searchParams.get("date") || "";
-  let team = searchParams.get("team") || "";
+  const { date, team } = router.query;
   const handleFilter = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    date = (event.currentTarget.elements.namedItem("date") as HTMLInputElement)
-      .value;
-    team = (event.currentTarget.elements.namedItem("team") as HTMLInputElement)
-      .value;
-    let query = date ? "?date=" + date + "&" : "?";
-    team ? (query += "team=" + team) : (query = query.replaceAll("&", ""));
-    router.push(`${pathname}` + query);
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          date: (
+            event.currentTarget.elements.namedItem("date") as HTMLInputElement
+          ).value,
+          team: (
+            event.currentTarget.elements.namedItem("team") as HTMLInputElement
+          ).value,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
     handleClose();
   };
   const textInput = useRef<HTMLInputElement>(null);

@@ -12,11 +12,15 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import useApiService from "./service/useApiService";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useCallback } from "react";
+import useApiService from "@/service/useApiService";
+import { useRouter } from "next/router";
 
-const pages = ["matches", "table"];
+const pages = [
+  { text: "ongoing", path: "/" },
+  { text: "tournaments", path: "tournaments" },
+];
 interface GameList {
   data: [
     {
@@ -28,7 +32,7 @@ interface GameList {
     }
   ];
 }
-function Header() {
+function Header({ id }: { id?: number }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -44,47 +48,23 @@ function Header() {
     setAnchorElNav(null);
   };
 
-  const { data: gameList, loading: gameListLoading } =
-    useApiService<GameList>("games");
-  useEffect(() => {
-    if (!gameList?.data?.length) return;
-    window.localStorage.setItem("gameList", JSON.stringify(gameList));
-    gameList?.data.forEach((element) => {
-      if (element.attributes.isActive) {
-        window.localStorage.setItem("activeGame", element.attributes.name);
-      }
-    });
-    return () => {};
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameList]);
-
   const createQueryString = useCallback(
-    (name: string, value: string) => {
+    (name?: string, value?: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
+      if (name && value) {
+        params.set(name, value);
+      }
 
       return params.toString();
     },
     [searchParams]
   );
-  let activeGame = "";
-  if (typeof window !== "undefined") {
-    activeGame = window.localStorage.getItem("activeGame") || "";
-  }
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    activeGame = window.localStorage.getItem("activeGame") || "";
-    if (activeGame)
-      router.push(pathname + "?" + createQueryString("game", activeGame || ""));
-    return () => {};
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <AppBar position="sticky" color="inherit">
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" className="max-w-6xl">
         <Toolbar disableGutters>
-          <Link href={"/" + "?" + createQueryString("game", activeGame)}>
+          <Link href={{ pathname: "/" }}>
             <Image
               src="/Seidor.png"
               alt="Vercel Logo"
@@ -94,7 +74,6 @@ function Header() {
               priority
             />
           </Link>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -125,26 +104,25 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <Link
-                  href={page + "?" + createQueryString("game", activeGame)}
-                  key={page}
-                >
+                <Link href={{ pathname: page.path }} key={page.text}>
                   <MenuItem
                     onClick={handleCloseNavMenu}
                     color="primary"
-                    href={page}
-                    selected={pathname === page ? true : false}
+                    href={page.path}
+                    selected={
+                      pathname === "/" + page.path || pathname === page.path
+                    }
                     className="uppercase"
                   >
                     <Typography
                       textAlign="center"
                       className={
-                        pathname === "/" + (page === "matches" ? "" : page)
+                        pathname === "/" + page.path || pathname === page.path
                           ? "!font-bold"
                           : ""
                       }
                     >
-                      {page}
+                      {page.text}
                     </Typography>
                   </MenuItem>
                 </Link>
@@ -153,20 +131,17 @@ function Header() {
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Link
-                href={page + "?" + createQueryString("game", activeGame)}
-                key={page}
-              >
+              <Link href={{ pathname: page.path }} key={page.text}>
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, display: "block" }}
                   className={
-                    pathname === "/" + (page === "matches" ? "" : page)
+                    pathname === "/" + page.path || pathname === page.path + id
                       ? "!font-bold"
                       : ""
                   }
                 >
-                  {page}
+                  {page.text}
                 </Button>
               </Link>
             ))}
@@ -176,13 +151,13 @@ function Header() {
             sx={{ flexGrow: 0 }}
             className="flex items-center font-mono text-sm"
           >
-            By
+            <span className="pr-4"> By</span>
             <Image
               src="/sraddha.png"
               alt="Vercel Logo"
               className="dark:invert"
-              width={100}
-              height={24}
+              width={30}
+              height={45}
               priority
             />
           </Box>
