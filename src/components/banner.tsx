@@ -78,7 +78,7 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
     }
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tournament, gameInput.current]);
+  }, [tournament, gameInput.current, game]);
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
