@@ -15,6 +15,11 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+@media (max-width: 550px) {
+ table td{
+  font-size: 0.78rem !important;
+ }
+}
 
 body {
   color: rgb(var(--foreground-rgb));

@@ -1,9 +1,5 @@
 import { createApiService } from "@/service/axios";
-import type {
-  InferGetServerSidePropsType,
-  GetServerSideProps,
-  Metadata,
-} from "next";
+import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 
 interface GameList {
   data: [
@@ -54,11 +50,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
       notFound: true,
     };
   }
-};
-
-export const metadata: Metadata = {
-  title: "Products Page",
-  description: "Explore our amazing products!",
 };
 
 export default function Page({

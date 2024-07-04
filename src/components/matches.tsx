@@ -48,13 +48,13 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
       <Head>
         <title>Matches | {name} </title>
       </Head>
-      <main className="flex min-h-screen flex-col items-center max-md:text-sm pb-11">
+      <main className="flex min-h-screen flex-col items-center max-md:text-xl pb-11">
         <div className="container flex flex-wrap max-w-6xl px-6">
           <TableContainer component={Paper} className="justify-center flex">
             {data?.meta.pagination.pageCount !== 0 && (
               <Table
                 sx={{
-                  width: { xs: "300px", sm: "100%" },
+                  width: { xs: "100%", sm: "100%" },
                 }}
                 aria-label="simple table"
               >

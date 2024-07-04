@@ -201,7 +201,7 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
             {!loading && (
               <Table
                 sx={{
-                  width: { xs: "300px", sm: "100%" },
+                  width: { xs: "100%", sm: "100%" },
                 }}
                 aria-label="simple table"
               >
