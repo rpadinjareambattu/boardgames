@@ -80,16 +80,6 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tournament, gameInput.current]);
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams]
-  );
-
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -205,7 +195,7 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
                   key={page.text}
                   className={`${
                     tab === page.tab ? "!font-bold !border-white" : ""
-                  } cursor-pointer inline-block uppercase border-blue-700 border-b-2 px-2 py-1 fir bg-blue-700 text-white first-of-type:pl-4 last-of-type:pr-4 first-of-type:rounded-tl-md last-of-type:rounded-tr-md hover:border-white max-md:text-xs`}
+                  } cursor-pointer inline-block uppercase border-blue-700 border-b-2 px-2 py-1 fir bg-blue-700 text-white first-of-type:pl-4 last-of-type:pr-4 first-of-type:rounded-tl-md last-of-type:rounded-tr-md hover:border-white max-md:text-xs select-none`}
                 >
                   {page.text}
                 </a>
