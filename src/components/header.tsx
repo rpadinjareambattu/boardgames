@@ -16,6 +16,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useCallback } from "react";
 import useApiService from "@/service/useApiService";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const pages = [
   { text: "ongoing", path: "/" },
@@ -61,109 +62,118 @@ function Header({ id }: { id?: number }) {
   );
 
   return (
-    <AppBar position="sticky" color="inherit">
-      <Container maxWidth="xl" className="max-w-6xl">
-        <Toolbar disableGutters>
-          <Link href={{ pathname: "/" }}>
-            <Image
-              src="/Seidor.png"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </Link>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
+    <>
+      <Head>
+        <meta name="twitter:title" content="Shraddha games" />
+        {/* <meta name="twitter:description" content="Cool description" /> */}
+        <meta name="twitter:image" content="/sraddha.png" />
+        {/* <meta name="twitter:card" content="summary_large_image" /> */}
+      </Head>
+      <AppBar position="sticky" color="inherit">
+        <Container maxWidth="xl" className="max-w-6xl">
+          <Toolbar disableGutters>
+            <Link href={{ pathname: "/" }}>
+              <Image
+                src="/Seidor.png"
+                alt="Vercel Logo"
+                className="dark:invert"
+                width={100}
+                height={24}
+                priority
+              />
+            </Link>
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: "block", md: "none" },
+                }}
+              >
+                {pages.map((page) => (
+                  <Link href={{ pathname: page.path }} key={page.text}>
+                    <MenuItem
+                      onClick={handleCloseNavMenu}
+                      color="primary"
+                      href={page.path}
+                      selected={
+                        pathname === "/" + page.path || pathname === page.path
+                      }
+                      className="uppercase"
+                    >
+                      <Typography
+                        textAlign="center"
+                        className={
+                          pathname === "/" + page.path || pathname === page.path
+                            ? "!font-bold"
+                            : ""
+                        }
+                      >
+                        {page.text}
+                      </Typography>
+                    </MenuItem>
+                  </Link>
+                ))}
+              </Menu>
+            </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <Link href={{ pathname: page.path }} key={page.text}>
-                  <MenuItem
+                  <Button
                     onClick={handleCloseNavMenu}
-                    color="primary"
-                    href={page.path}
-                    selected={
-                      pathname === "/" + page.path || pathname === page.path
+                    sx={{ my: 2, display: "block" }}
+                    className={
+                      pathname === "/" + page.path ||
+                      pathname === page.path + id
+                        ? "!font-bold"
+                        : ""
                     }
-                    className="uppercase"
                   >
-                    <Typography
-                      textAlign="center"
-                      className={
-                        pathname === "/" + page.path || pathname === page.path
-                          ? "!font-bold"
-                          : ""
-                      }
-                    >
-                      {page.text}
-                    </Typography>
-                  </MenuItem>
+                    {page.text}
+                  </Button>
                 </Link>
               ))}
-            </Menu>
-          </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Link href={{ pathname: page.path }} key={page.text}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, display: "block" }}
-                  className={
-                    pathname === "/" + page.path || pathname === page.path + id
-                      ? "!font-bold"
-                      : ""
-                  }
-                >
-                  {page.text}
-                </Button>
-              </Link>
-            ))}
-          </Box>
+            </Box>
 
-          <Box
-            sx={{ flexGrow: 0 }}
-            className="flex items-center font-mono text-sm"
-          >
-            <span className="pr-4"> By</span>
-            <Image
-              src="/sraddha.png"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={30}
-              height={45}
-              priority
-            />
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            <Box
+              sx={{ flexGrow: 0 }}
+              className="flex items-center font-mono text-sm"
+            >
+              <span className="pr-4"> By</span>
+              <Image
+                src="/sraddha.png"
+                alt="Vercel Logo"
+                className="dark:invert"
+                width={30}
+                height={45}
+                priority
+              />
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </>
   );
 }
 export default Header;
