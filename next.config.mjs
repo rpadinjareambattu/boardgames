@@ -7,7 +7,7 @@ const nextConfig = {
         remotePatterns: [
           {
             protocol: 'https',
-            hostname: 'otboardgames.azurewebsites.net',
+            hostname: 'shraddhagames.azurewebsites.net',
             port: '',
             pathname: '/uploads/**',
           },

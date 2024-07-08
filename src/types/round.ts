@@ -2,82 +2,48 @@ export interface Round {
   data: [
     {
       id: number;
-      attributes: {
-        name: string;
-        gameType: string;
-        matches: {
-          data: [
+      name: string;
+      gameType: string;
+      matches: [
+        {
+          id: number;
+          sub_matches: [
             {
               id: number;
-              attributes: {
-                sub_matches: {
-                  data: [
-                    {
-                      id: number;
-                      attributes: {
-                        matchType: string;
-                        date: string;
-                        teamAScore: number;
-                        teamBScore: number;
-                        playerA1: {
-                          data: {
-                            id: number;
-                            attributes: {
-                              name: string;
-                            };
-                          };
-                        };
-                        playerA2: {
-                          data: {
-                            id: number;
-                            attributes: {
-                              name: string;
-                            };
-                          };
-                        };
-                        playerB1: {
-                          data: {
-                            id: number;
-                            attributes: {
-                              name: string;
-                            };
-                          };
-                        };
-                        playerB2: {
-                          data: {
-                            id: number;
-                            attributes: {
-                              name: string;
-                            };
-                          };
-                        };
-                      };
-                    }
-                  ];
-                };
-                teamA: {
-                  data: {
-                    id: number;
-                    attributes: {
-                      name: string;
-                    };
-                  };
-                };
-                teamB: {
-                  data: {
-                    id: number;
-                    attributes: {
-                      name: string;
-                    };
-                  };
-                };
-                teamAScore: number;
-                teamBScore: number;
+              matchType: string;
+              date: string;
+              teamAScore: number;
+              teamBScore: number;
+              playerA1: {
+                id: number;
+                name: string;
+              };
+              playerA2: {
+                id: number;
+                name: string;
+              };
+              playerB1: {
+                id: number;
+                name: string;
+              };
+              playerB2: {
+                id: number;
+                name: string;
               };
             }
           ];
-        };
-      };
+          teamA: {
+            id: number;
+            name: string;
+          };
+          teamB: {
+            id: number;
+            name: string;
+          };
+          teamAScore: number;
+          teamBScore: number;
+        }
+      ];
     }
   ];
   meta: {

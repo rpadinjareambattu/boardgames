@@ -15,61 +15,8 @@ import { usePathname, useSearchParams } from "next/navigation";
 import useApiService from "@/service/useApiService";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { Round } from "@/types/round";
 
-interface Item {
-  data: [
-    {
-      id: number;
-      attributes: {
-        name: string;
-        gameType: string;
-        matches: {
-          data: [
-            {
-              id: number;
-              attributes: {
-                teamA: {
-                  data: {
-                    id: number;
-                    attributes: {
-                      name: string;
-                    };
-                  };
-                };
-                teamB: {
-                  data: {
-                    id: number;
-                    attributes: {
-                      name: string;
-                    };
-                  };
-                };
-                teamAScore: number;
-                teamBScore: number;
-              };
-            }
-          ];
-        };
-      };
-    }
-  ];
-  meta: {
-    pagination: {
-      pageCount: number;
-    };
-  };
-}
-interface Team {
-  data: [
-    {
-      id: number;
-      attributes: {
-        name: string;
-        points: number;
-      };
-    }
-  ];
-}
 interface TableData {
   id: number;
   name: string;
@@ -107,14 +54,17 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
     carroms: 5,
     snakeAndLadder: 5,
   };
-  const { data, loading, error } = useApiService<Item>(
+  const { data, loading, error } = useApiService<Round>(
     "rounds?populate=matches.teamA,matches.teamB&filters[gameType][$eq]=" +
       game +
       "&filters[tournament][$eq]=" +
       tournament,
     game != "" && tournament != ""
   );
-  const { data: tData, loading: tLoading } = useApiService<Team>("teams", true);
+  const { data: tData, loading: tLoading } = useApiService<TeamData>(
+    "teams",
+    true
+  );
 
   useEffect(() => {
     if (!tab && tournament) {
@@ -133,10 +83,10 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
   useEffect(() => {
     if (!loading && !tLoading && data && tData) {
       const dd: TableData[] = [];
-      tData.data.map(({ id, attributes }) => {
+      tData.data.map(({ id, name }) => {
         const tt: TableData = {
           id,
-          name: attributes.name,
+          name: name,
           points: calcPoints(id),
           played: calcPlayed(id),
         };
@@ -149,13 +99,15 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
   }, [tLoading, loading, game]);
   const calcPoints = (id: number) => {
     let p = 0;
+
+    console.log("-->", data);
     data?.data.map((round) => {
-      round.attributes.matches.data.map((match) => {
-        if (match.attributes.teamA.data.id === id) {
-          p += match.attributes?.teamAScore;
+      round.matches.map((match) => {
+        if (match.teamA.id === id) {
+          p += match?.teamAScore;
         }
-        if (match.attributes.teamB.data.id === id) {
-          p += match.attributes?.teamBScore;
+        if (match.teamB.id === id) {
+          p += match?.teamBScore;
         }
       });
     });
@@ -164,14 +116,14 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
   const calcPlayed = (id: number) => {
     let p = 0;
     data?.data.map((round) => {
-      round.attributes.matches.data.map((match) => {
-        if (match.attributes.teamA.data.id === id) {
-          if (match.attributes?.teamAScore != undefined) {
+      round.matches.map((match) => {
+        if (match.teamA.id === id) {
+          if (match?.teamAScore != undefined) {
             p++;
           }
         }
-        if (match.attributes.teamB.data.id === id) {
-          if (match.attributes?.teamBScore != undefined) {
+        if (match.teamB.id === id) {
+          if (match?.teamBScore != undefined) {
             p++;
           }
         }

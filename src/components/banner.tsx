@@ -11,16 +11,15 @@ import { useRouter } from "next/router";
 const pages = [
   { text: "matches", tab: "matches" },
   { text: "points table", tab: "table" },
+  { text: "Gallery", tab: "gallery" },
 ];
 
 interface GameList {
   data: [
     {
       id: number;
-      attributes: {
-        name: string;
-        isActive: boolean;
-      };
+      name: string;
+      isActive: boolean;
     }
   ];
 }
@@ -30,7 +29,6 @@ interface BannerProps {
 }
 const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const { tab, game, tournament: tId, ...otherQueries } = router.query;
   const gameInput = React.useRef<HTMLSelectElement>(null);
@@ -48,28 +46,28 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, otherQueries, router]);
   useEffect(() => {
-    let activeItem = tournament?.attributes.games?.data.find(
-      (item) => item.id === tournament?.attributes.activeGame?.data.id
+    let activeItem = tournament?.games?.find(
+      (item) => item.id === tournament?.activeGame?.id
     );
     if (activeItem && gameInput.current && !game) {
-      gameInput.current.value = activeItem.attributes.name;
+      gameInput.current.value = activeItem.name;
       router.push(
         {
           pathname: router.pathname,
-          query: { ...router.query, game: activeItem.attributes.name },
+          query: { ...router.query, game: activeItem.name },
         },
         undefined,
         { shallow: true }
       );
     }
     if (!activeItem && gameInput.current && !game) {
-      activeItem = tournament?.attributes.games?.data[0];
+      activeItem = tournament?.games?.[0];
       if (activeItem) {
-        gameInput.current.value = activeItem.attributes.name;
+        gameInput.current.value = activeItem.name;
         router.push(
           {
             pathname: router.pathname,
-            query: { ...router.query, game: activeItem.attributes.name },
+            query: { ...router.query, game: activeItem.name },
           },
           undefined,
           { shallow: true }
@@ -117,9 +115,8 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
           <div className="pr-4">
             <Image
               src={
-                tournament?.attributes?.cover.data?.attributes.url
-                  ? process.env.NEXT_PUBLIC_UPLOADS +
-                    tournament?.attributes.cover.data.attributes.url
+                tournament?.cover?.url
+                  ? process.env.NEXT_PUBLIC_UPLOADS + tournament?.cover.url
                   : "/placeholder.jpg"
               }
               alt="Logo"
@@ -136,9 +133,8 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
             >
               <Image
                 src={
-                  tournament?.attributes?.cover.data?.attributes.url
-                    ? process.env.NEXT_PUBLIC_UPLOADS +
-                      tournament?.attributes.cover.data.attributes.url
+                  tournament?.cover?.url
+                    ? process.env.NEXT_PUBLIC_UPLOADS + tournament.cover.url
                     : "/placeholder.jpg"
                 }
                 alt="Logo"
@@ -152,19 +148,19 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
           </div>
           <div className="flex-auto flex flex-col">
             <h1 className="text-2xl font-mono text-white font-semibold drop-shadow max-md:text-base">
-              {tournament?.attributes?.name || "Tournament"}
+              {tournament?.name || "Tournament"}
             </h1>
             <div className="flex-auto">
               <p className="text-base text-white drop-shadow max-md:text-sm">
                 <span className="border-r-2 border-blue-300 pr-3 mr-3">
-                  {tournament?.attributes?.startDate != null
-                    ? tournament?.attributes.startDate +
-                      (tournament.attributes.endDate != null
-                        ? " to " + tournament.attributes.endDate
+                  {tournament?.startDate != null
+                    ? tournament.startDate +
+                      (tournament.endDate != null
+                        ? " to " + tournament.endDate
                         : " to TBD")
                     : "Date: TBD"}
                 </span>
-                {tournament?.attributes?.views || "0"} Views
+                {tournament?.views || "0"} Views
               </p>
             </div>
             {!loading && (
@@ -175,12 +171,12 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
                 defaultValue={game}
                 className="bg-gray-50 self-start capitalize border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 inline-block max-md:p-1 mt-1"
               >
-                {tournament?.attributes.games?.data.map((t) => (
-                  <option key={t.id} value={t.attributes.name}>
-                    {t.attributes.name}
+                {tournament?.games?.map((t) => (
+                  <option key={t.id} value={t.name}>
+                    {t.name}
                   </option>
                 ))}
-                {!tournament?.attributes.games?.data.length && (
+                {!tournament?.games?.length && (
                   <option value={game}>{game}</option>
                 )}
               </select>

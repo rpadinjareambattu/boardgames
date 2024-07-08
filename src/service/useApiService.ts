@@ -1,6 +1,7 @@
 import useSWR from "swr";
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import { createApiService } from "./axios";
+import { flattenAttributes } from "@/lib/utils";
 
 interface ApiResponse<T> {
   data: T | null;
@@ -21,7 +22,7 @@ export const useApiService = <T>(
   );
 
   return {
-    data: data as T,
+    data: { ...data, data: flattenAttributes(data?.data) } as T,
     loading: !data && !error,
     error: error as Error,
   };

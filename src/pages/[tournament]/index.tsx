@@ -1,4 +1,5 @@
 import Banner from "@/components/banner";
+import Gallery from "@/components/gallery";
 import Header from "@/components/header";
 import Matches from "@/components/matches";
 import PointsTable from "@/components/pointsTable";
@@ -7,7 +8,6 @@ import usePutRequest from "@/service/usePutRequest";
 import { TournamentData, TournamentToUpdate } from "@/types/tournament";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Head from "next/head";
 
 const Page = () => {
   const router = useRouter();
@@ -22,12 +22,14 @@ const Page = () => {
     url: `tournaments/${tournament}`,
     data: {
       data: {
-        views: tournamentData ? +tournamentData.data.attributes.views + 1 : 0,
+        views: tournamentData ? +tournamentData?.data?.views + 1 : 0,
       },
     },
   });
   useEffect(() => {
-    if (tournamentData && !isCalled) {
+    // todo
+    // && process.env.NODE_ENV === "production"
+    if (tournamentData?.data && !isCalled) {
       putRequest();
       setIsCalled(true);
     }
@@ -43,12 +45,13 @@ const Page = () => {
         loading={loading}
       />
       {tab === "matches" && (
-        <Matches name={tournamentData?.data.attributes.name || "Tournament"} />
+        <Matches name={tournamentData?.data?.name || "Tournament"} />
       )}
       {tab === "table" && (
-        <PointsTable
-          name={tournamentData?.data.attributes.name || "Tournament"}
-        />
+        <PointsTable name={tournamentData?.data?.name || "Tournament"} />
+      )}
+      {tab === "gallery" && (
+        <Gallery name={tournamentData?.data?.name || "Tournament"} />
       )}
     </>
   );

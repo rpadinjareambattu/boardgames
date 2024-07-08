@@ -1,6 +1,6 @@
 "use client";
 import { Card, CircularProgress } from "@mui/material";
-import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import { ReactElement, useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useApiService from "@/service/useApiService";
 import { NextPageWithLayout } from "../_app";
@@ -8,101 +8,13 @@ import Layout from "@/components/layout";
 import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
-
-interface Match {
-  id: number;
-  attributes: {
-    teamA: TeamRes;
-    teamB: TeamRes;
-    teamAScore: number;
-    teamBScore: number;
-  };
-}
-
-interface Round {
-  id: number;
-  attributes: {
-    name: string;
-    gameType: string;
-    matches: {
-      data: Match[];
-    };
-  };
-}
-
-interface Item {
-  data: Round[];
-}
-interface TeamRes {
-  data: {
-    id: number;
-    attributes: {
-      name: string;
-    };
-  };
-}
-interface Team {
-  id: number;
-  attributes: {
-    name: string;
-    points: number;
-  };
-}
-
-interface Teams {
-  data: Team[];
-}
-
-interface TableData {
-  id: number;
-  name: string;
-  points: number;
-  played: number;
-}
-interface Game {
-  id: number;
-  attributes: {
-    name: string;
-    isActive: boolean;
-  };
-}
-
-interface GameList {
-  data: Game[];
-}
-interface GameTypes {
-  chess: number;
-  ludo: number;
-  carroms: number;
-  snakeAndLadder: number;
-}
-interface tmtList {
-  data: [
-    {
-      id: number;
-      attributes: {
-        name: string;
-        isActive: boolean;
-        views: number;
-        startDate: string;
-        endDate: string;
-        cover: {
-          data: {
-            attributes: {
-              url: string;
-            };
-          };
-        };
-      };
-    }
-  ];
-}
+import { TournamentListData } from "@/types/tournament";
 
 const About: NextPageWithLayout = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const { data, loading, error } = useApiService<tmtList>(
+  const { data, loading, error } = useApiService<TournamentListData>(
     "tournaments?populate[media][fields][0]=name&populate[media][fields][1]=url&populate[cover][fields][1]=url"
   );
   const createQueryString = useCallback(
@@ -135,7 +47,7 @@ const About: NextPageWithLayout = () => {
           <div className="font-mono font-bold from-zinc-200 flex-1 content-center max-md:col my-6">
             Tournaments
           </div>
-          {data?.data.map((el) => {
+          {data?.data?.map((el) => {
             return (
               <Card
                 key={el.id}
@@ -147,9 +59,8 @@ const About: NextPageWithLayout = () => {
                   <div className="pr-4">
                     <Image
                       src={
-                        el.attributes.cover.data?.attributes.url
-                          ? process.env.NEXT_PUBLIC_UPLOADS +
-                            el.attributes.cover.data.attributes.url
+                        el.cover?.url
+                          ? process.env.NEXT_PUBLIC_UPLOADS + el.cover.url
                           : "/placeholder.jpg"
                       }
                       alt="Logo"
@@ -161,19 +72,19 @@ const About: NextPageWithLayout = () => {
                   </div>
                   <div className="flex-auto flex flex-col">
                     <h1 className="text-2xl font-mono  font-semibold drop-shadow max-md:text-base">
-                      {el.attributes?.name || "Tournament"}
+                      {el?.name || "Tournament"}
                     </h1>
                     <div className="flex-auto">
                       <p className="text-base  drop-shadow max-md:text-sm">
                         <span className="border-r-2 border-blue-300 pr-3 mr-3">
-                          {el.attributes.startDate != null
-                            ? el.attributes.startDate +
-                              (el.attributes.endDate != null
-                                ? " to " + el.attributes.endDate
+                          {el.startDate != null
+                            ? el.startDate +
+                              (el.endDate != null
+                                ? " to " + el.endDate
                                 : " to TBD")
                             : "Date: TBD"}
                         </span>
-                        {el.attributes?.views || "0"} Views
+                        {el?.views || "0"} Views
                       </p>
                     </div>
                   </div>

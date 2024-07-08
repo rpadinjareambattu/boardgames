@@ -40,7 +40,9 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
 
   const { data, loading } = useApiService<Round>(
     "rounds?populate=matches.teamA,matches.teamB,matches.sub_matches.playerA1,matches.sub_matches.playerA2,matches.sub_matches.playerB1,matches.sub_matches.playerB2&filters[gameType][$eq]=" +
-      game,
+      game +
+      "&filters[tournament][$eq]=" +
+      tournament,
     game != ""
   );
   return (
@@ -51,7 +53,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
       <main className="flex min-h-screen flex-col items-center max-md:text-xl pb-11">
         <div className="container flex flex-wrap max-w-6xl px-6">
           <TableContainer component={Paper} className="justify-center flex">
-            {data?.meta.pagination.pageCount !== 0 && (
+            {data?.meta?.pagination.pageCount !== 0 && (
               <Table
                 sx={{
                   width: { xs: "100%", sm: "100%" },
@@ -72,80 +74,71 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                 </TableHead>
                 {!loading &&
                   data?.data
-                    .sort((a, b) =>
-                      b.attributes.name.localeCompare(a.attributes.name)
-                    )
+                    .sort((a, b) => b.name.localeCompare(a.name))
                     .map((round) => (
                       <>
-                        {round.attributes.matches.data
+                        {round.matches
                           .filter((match) => {
                             if (!team) return match;
                             return (
-                              +team === match.attributes.teamA.data.id ||
-                              +team === match.attributes.teamB.data.id
+                              +team === match.teamA.id ||
+                              +team === match.teamB.id
                             );
                           })
                           .map((match, i) => (
                             <>
-                              {!!match.attributes.sub_matches.data.filter(
-                                (item) => {
-                                  if (!date) return true;
-                                  const itemDate = new Date(
-                                    item.attributes.date
-                                  ).toDateString();
-                                  const filterDateStr = new Date(
-                                    String(date)
-                                  ).toDateString();
-                                  return itemDate === filterDateStr;
-                                }
-                              ).length && (
+                              {!!match.sub_matches.filter((item) => {
+                                if (!date) return true;
+                                const itemDate = new Date(
+                                  item.date
+                                ).toDateString();
+                                const filterDateStr = new Date(
+                                  String(date)
+                                ).toDateString();
+                                return itemDate === filterDateStr;
+                              }).length && (
                                 <TableBody key={`${i + 1000}`}>
                                   <TableRow className="header">
                                     <TableCell className="!py-1">
                                       <strong>
-                                        {capitalize(round.attributes.gameType)}
+                                        {capitalize(round.gameType)}
                                       </strong>
                                       {" - "}
-                                      {round.attributes.name}
+                                      {round.name}
                                     </TableCell>
                                     <TableCell className="!py-1" align="right">
                                       <span
                                         className={
-                                          match.attributes.teamAScore === 3
+                                          match.teamAScore === 3
                                             ? "text-green-700"
                                             : ""
                                         }
                                       >
-                                        {
-                                          match.attributes.teamA.data.attributes
-                                            .name
-                                        }
+                                        {match.teamA.name}
                                       </span>
                                     </TableCell>
                                     <TableCell className="!py-1" align="center">
                                       <span
                                         className={
-                                          match.attributes.teamAScore === 3
+                                          match.teamAScore === 3
                                             ? "text-green-700"
                                             : ""
                                         }
                                       >
-                                        {match.attributes.teamAScore !=
-                                        undefined
-                                          ? match.attributes.teamAScore
+                                        {match.teamAScore != undefined
+                                          ? match.teamAScore
                                           : "-"}{" "}
                                       </span>
                                       {" - "}
                                       <span
                                         className={
-                                          match.attributes.teamBScore === 3
+                                          match.teamBScore === 3
                                             ? "text-green-700"
                                             : ""
                                         }
                                       >
-                                        {match.attributes.teamBScore !=
-                                        undefined
-                                          ? match.attributes.teamBScore
+                                        {match.teamBScore != undefined
+                                          ? match.teamBScore
                                           : "-"}
                                       </span>
                                     </TableCell>
@@ -155,23 +148,20 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                     >
                                       <span
                                         className={
-                                          match.attributes.teamBScore === 3
+                                          match.teamBScore === 3
                                             ? "text-green-700"
                                             : ""
                                         }
                                       >
-                                        {
-                                          match.attributes.teamB.data.attributes
-                                            .name
-                                        }
+                                        {match.teamB.name}
                                       </span>
                                     </TableCell>
                                   </TableRow>
-                                  {match.attributes.sub_matches.data
+                                  {match.sub_matches
                                     .filter((item) => {
                                       if (!date) return item;
                                       const itemDate = new Date(
-                                        item.attributes.date
+                                        item.date
                                       ).toDateString();
                                       const filterDateStr = new Date(
                                         String(date)
@@ -180,8 +170,8 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                     })
                                     .sort(
                                       (a, b) =>
-                                        new Date(b.attributes.date).getTime() -
-                                        new Date(a.attributes.date).getTime()
+                                        new Date(b.date).getTime() -
+                                        new Date(a.date).getTime()
                                     )
                                     .map((sMatch, ii) => (
                                       <>
@@ -192,12 +182,9 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                             align="right"
                                           >
                                             <small className="border-r-2 block pr-4">
-                                              {sMatch.attributes.matchType}{" "}
-                                              <br />
+                                              {sMatch.matchType} <br />
                                               <FormattedDate
-                                                isoDateString={
-                                                  sMatch.attributes.date
-                                                }
+                                                isoDateString={sMatch.date}
                                                 dateFormat="MMM dd - hh:mm a"
                                               />
                                             </small>
@@ -208,21 +195,15 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                           >
                                             <span
                                               className={
-                                                sMatch.attributes.teamAScore >=
-                                                2
+                                                sMatch.teamAScore >= 2
                                                   ? "text-green-700"
                                                   : ""
                                               }
                                             >
-                                              {
-                                                sMatch.attributes.playerA1?.data
-                                                  ?.attributes.name
-                                              }{" "}
-                                              {sMatch.attributes.playerA2
-                                                ?.data &&
-                                                `and ${sMatch.attributes.playerA2?.data?.attributes.name} `}
+                                              {sMatch.playerA1?.name}{" "}
+                                              {sMatch.playerA2 &&
+                                                `and ${sMatch.playerA2?.name} `}
                                             </span>
-                                            {/* <br /> */}
                                           </TableCell>
                                           <TableCell
                                             sx={{ minWidth: "65px" }}
@@ -230,29 +211,25 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                           >
                                             <span
                                               className={
-                                                sMatch.attributes.teamAScore >=
-                                                2
+                                                sMatch.teamAScore >= 2
                                                   ? "text-green-700"
                                                   : ""
                                               }
                                             >
-                                              {sMatch.attributes.teamAScore !=
-                                              undefined
-                                                ? sMatch.attributes.teamAScore
+                                              {sMatch.teamAScore != undefined
+                                                ? sMatch.teamAScore
                                                 : "--"}
                                             </span>
                                             {" - "}
                                             <span
                                               className={
-                                                sMatch.attributes.teamBScore >=
-                                                2
+                                                sMatch.teamBScore >= 2
                                                   ? "text-green-700"
                                                   : ""
                                               }
                                             >
-                                              {sMatch.attributes.teamBScore !=
-                                              undefined
-                                                ? sMatch.attributes.teamBScore
+                                              {sMatch.teamBScore != undefined
+                                                ? sMatch.teamBScore
                                                 : "--"}
                                             </span>
                                           </TableCell>
@@ -262,19 +239,14 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                           >
                                             <span
                                               className={
-                                                sMatch.attributes.teamBScore >=
-                                                2
+                                                sMatch.teamBScore >= 2
                                                   ? "text-green-700"
                                                   : ""
                                               }
                                             >
-                                              {
-                                                sMatch.attributes.playerB1?.data
-                                                  ?.attributes.name
-                                              }{" "}
-                                              {sMatch.attributes.playerB2
-                                                ?.data &&
-                                                `and ${sMatch.attributes.playerB2?.data?.attributes.name} `}
+                                              {sMatch.playerB1?.name}{" "}
+                                              {sMatch.playerB2 &&
+                                                `and ${sMatch.playerB2?.name} `}
                                             </span>
                                           </TableCell>
                                         </TableRow>
@@ -284,15 +256,13 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                               )}
                             </>
                           ))}
-                        {!round.attributes.matches.data.length && (
+                        {!round.matches.length && (
                           <TableBody className="header">
-                            <TableRow key={round.attributes.name}>
+                            <TableRow key={round.name}>
                               <TableCell colSpan={4} scope="row" align="center">
-                                <strong>
-                                  {capitalize(round.attributes.gameType)}
-                                </strong>
+                                <strong>{capitalize(round.gameType)}</strong>
                                 {" - "}
-                                {round.attributes.name} {" - TBD"}
+                                {round.name} {" - TBD"}
                               </TableCell>
                             </TableRow>
                           </TableBody>
@@ -302,7 +272,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
               </Table>
             )}
 
-            {data?.meta.pagination.pageCount === 0 && !loading && (
+            {data?.meta?.pagination.pageCount === 0 && !loading && (
               <TableBody className="header">
                 <TableRow>
                   <TableCell colSpan={4} scope="row" align="center">
