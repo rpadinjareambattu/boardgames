@@ -23,7 +23,7 @@ const useApiService = <T>(
     }
 
     const apiService: AxiosInstance = axios.create({
-      baseURL: "https://otboardgames.azurewebsites.net/api/",
+      baseURL: "https://shraddhagames.azurewebsites.net/api/",
       timeout: 5000,
       headers: {
         "Content-Type": "application/json",

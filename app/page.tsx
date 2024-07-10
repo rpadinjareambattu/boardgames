@@ -163,7 +163,7 @@ export default function Page() {
   return (
     <main className="flex min-h-screen flex-col items-center max-md:px-4 max-md:text-sm">
       <div className="mb-14">
-        <div className="flex flex-wrap">
+        {/* <div className="flex flex-wrap">
           <code className="font-mono font-bold from-zinc-200 flex-1 content-center max-md:col my-6">
             Board Game Bonanza Season 2
           </code>
@@ -184,9 +184,14 @@ export default function Page() {
               </select>
             )}
           </div>
-        </div>
-
-        <TableContainer component={Paper} className="justify-center flex">
+        </div> */}
+        <h2 className="text-lg my-10">
+          Check out the new app on:{" "}
+          <a href="https://shraddhagames.vercel.app/" className="text-blue-500">
+            https://shraddhagames.vercel.app
+          </a>
+        </h2>
+        {/* <TableContainer component={Paper} className="justify-center flex">
           {data?.meta.pagination.pageCount !== 0 && (
             <Table
               sx={{
@@ -362,7 +367,6 @@ export default function Page() {
                                                   ?.attributes.name
                                               }{" "}
                                             </span>
-                                            {/* <br /> */}
                                           </TableCell>
                                           <TableCell
                                             sx={{ minWidth: "65px" }}
@@ -459,7 +463,7 @@ export default function Page() {
           <div className="mt-20 justify-center items-center flex">
             <CircularProgress color="secondary" />
           </div>
-        )}
+        )} */}
       </div>
     </main>
   );
