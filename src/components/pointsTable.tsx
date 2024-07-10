@@ -49,8 +49,8 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
   const { game, tournament, tab } = router.query;
   const [tableData, setTableData] = useState<TableData[]>([]);
   const played: GameTypes = {
-    chess: 3,
-    ludo: 3,
+    chess: 5,
+    ludo: 5,
     carroms: 5,
     snakeAndLadder: 5,
   };
