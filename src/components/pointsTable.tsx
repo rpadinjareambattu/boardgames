@@ -15,7 +15,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import useApiService from "@/service/useApiService";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { Round } from "@/types/round";
+import { RoundData } from "@/types/round";
 
 interface TableData {
   id: number;
@@ -54,10 +54,10 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
     carroms: 5,
     snakeAndLadder: 5,
   };
-  const { data, loading, error } = useApiService<Round>(
-    "rounds?populate=matches.teamA,matches.teamB&filters[gameType][$eq]=" +
+  const { data, loading, error } = useApiService<RoundData>(
+    "v3-rounds?queryType=matches&filters[gameType][name][$eq]=" +
       game +
-      "&filters[tournament][$eq]=" +
+      "&filters[v_3_tournament][$eq]=" +
       tournament,
     game != "" && tournament != ""
   );

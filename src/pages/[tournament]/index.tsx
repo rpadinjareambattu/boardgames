@@ -15,7 +15,7 @@ const Page = () => {
   const { tab, tournament } = router.query;
 
   const { data: tournamentData, loading } = useApiService<TournamentData>(
-    `tournaments/${tournament}?populate[media][fields][0]=name&populate[media][fields][1]=url&populate[cover][fields][1]=url&populate[games][fields][0]=id&populate[games][fields][1]=name&populate[activeGame][fields][0]=id`,
+    `v3tournaments/${tournament}?populate[cover][fields][0]=url&populate[games][fields][0]=name&populate[activeGame][fields][0]=name&fields[0]=name&fields[1]=views&fields[2]=startDate&fields[3]=endDate`,
     !!tournament
   );
   const { putRequest } = usePutRequest<TournamentToUpdate, TournamentData>({

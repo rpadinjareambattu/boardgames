@@ -1,5 +1,12 @@
+import { Round } from "./round";
+
 export interface TournamentData {
   data: Tournament;
+  meta: {
+    pagination: {
+      pageCount: number;
+    };
+  };
 }
 export interface TournamentListData {
   data: [Tournament];
@@ -11,6 +18,7 @@ export interface Tournament {
   views: number;
   startDate: string;
   endDate: string;
+  rounds: [Round];
   cover: {
     url: string;
   };

@@ -6,9 +6,9 @@ const nextConfig = {
       images: {
         remotePatterns: [
           {
-            protocol: 'https',
-            hostname: 'shraddhagames.azurewebsites.net',
-            port: '',
+            protocol: process.env.NEXT_PUBLIC_IMAGE_PROTOCOL,
+            hostname: process.env.NEXT_PUBLIC_IMAGE_HOST,
+            port: process.env.NEXT_PUBLIC_IMAGE_PORT,
             pathname: '/uploads/**',
           },
         ],

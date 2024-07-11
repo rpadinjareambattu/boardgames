@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const apiService = createApiService();
 
   try {
-    const response = await apiService.get<GameList>("tournaments");
+    const response = await apiService.get<GameList>("v3tournament");
     const data = response.data;
 
     // Find the first item where isActive is true

@@ -15,13 +15,6 @@ interface BannerProps {
 const Gallery: React.FC<BannerProps> = ({ name }) => {
   const [open, setOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [animationClass, setAnimationClass] = useState("image-enter");
-
-  const images: string[] = [
-    "https://via.placeholder.com/600", // Replace with your image URLs
-    "https://via.placeholder.com/600",
-    "https://via.placeholder.com/600",
-  ];
 
   const handleOpen = (index: number) => {
     setSelectedImageIndex(index);
@@ -31,41 +24,28 @@ const Gallery: React.FC<BannerProps> = ({ name }) => {
   const handleClose = () => setOpen(false);
 
   const handleNext = () => {
-    setAnimationClass("image-exit");
-    setTimeout(() => {
-      setSelectedImageIndex(
-        (prevIndex) =>
-          (prevIndex + 1) % (tournamentData?.data.gallery?.length || 0)
-      );
-      setAnimationClass("image-enter");
-    }, 300);
+    setSelectedImageIndex(
+      (prevIndex) =>
+        (prevIndex + 1) % (tournamentData?.data.gallery?.length || 0)
+    );
   };
 
   const handlePrev = () => {
-    setAnimationClass("image-exit");
-    setTimeout(() => {
-      setSelectedImageIndex(
-        (prevIndex) =>
-          (prevIndex - 1 + (tournamentData?.data.gallery.length || 0)) %
-          (tournamentData?.data.gallery.length || 0)
-      );
-      setAnimationClass("image-enter");
-    }, 300);
+    setSelectedImageIndex(
+      (prevIndex) =>
+        (prevIndex - 1 + (tournamentData?.data.gallery.length || 0)) %
+        (tournamentData?.data.gallery.length || 0)
+    );
   };
 
-  useEffect(() => {
-    if (open) {
-      setAnimationClass("image-enter-active");
-    }
-  }, [open]);
   const router = useRouter();
-  const { game, tournament, tab } = router.query;
+  const { tournament } = router.query;
   const {
     data: tournamentData,
     loading,
     error,
   } = useApiService<TournamentData>(
-    `tournaments/${tournament}?populate=gallery`,
+    `v3tournaments/${tournament}?populate=gallery`,
     !!tournament
   );
   if (error) return <p>Error: {error.message}</p>;
@@ -104,7 +84,9 @@ const Gallery: React.FC<BannerProps> = ({ name }) => {
       <ImageGalleryModal
         open={open}
         handleClose={handleClose}
-        imageSrc={tournamentData?.data?.gallery[selectedImageIndex]?.url || ""}
+        imageSrc={
+          tournamentData?.data?.gallery?.[selectedImageIndex]?.url || ""
+        }
         handleNext={handleNext}
         handlePrev={handlePrev}
       />

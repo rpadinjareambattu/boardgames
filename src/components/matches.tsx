@@ -14,10 +14,11 @@ import {
 import Filter from "./filter";
 import FormattedDate from "./formattedDate";
 import useApiService from "@/service/useApiService";
-import { Round } from "@/types/round";
+import { Round, RoundData } from "@/types/round";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Head from "next/head";
+import { Tournament, TournamentData } from "@/types/tournament";
 interface BannerProps {
   name: string;
 }
@@ -38,10 +39,10 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
-  const { data, loading } = useApiService<Round>(
-    "rounds?populate=matches.teamA,matches.teamB,matches.sub_matches.playerA1,matches.sub_matches.playerA2,matches.sub_matches.playerB1,matches.sub_matches.playerB2&filters[gameType][$eq]=" +
+  const { data, loading } = useApiService<RoundData>(
+    "v3-rounds?queryType=matches&filters[gameType][name][$eq]=" +
       game +
-      "&filters[tournament][$eq]=" +
+      "&filters[v_3_tournament][$eq]=" +
       tournament,
     game != ""
   );
@@ -53,7 +54,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
       <main className="flex min-h-screen flex-col items-center max-md:text-xl pb-11">
         <div className="container flex flex-wrap max-w-6xl px-6">
           <TableContainer component={Paper} className="justify-center flex">
-            {data?.meta?.pagination.pageCount !== 0 && (
+            {data?.meta?.pagination?.pageCount !== 0 && (
               <Table
                 sx={{
                   width: { xs: "100%", sm: "100%" },
@@ -101,7 +102,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                   <TableRow className="header">
                                     <TableCell className="!py-1">
                                       <strong>
-                                        {capitalize(round.gameType)}
+                                        {capitalize(round?.gameType.name)}
                                       </strong>
                                       {" - "}
                                       {round.name}
@@ -200,9 +201,11 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                                   : ""
                                               }
                                             >
-                                              {sMatch.playerA1?.name}{" "}
-                                              {sMatch.playerA2 &&
-                                                `and ${sMatch.playerA2?.name} `}
+                                              {sMatch.playersA.map((e, i) => {
+                                                const and =
+                                                  i === 0 ? `` : ` and `;
+                                                return and + e.name;
+                                              })}
                                             </span>
                                           </TableCell>
                                           <TableCell
@@ -244,9 +247,11 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                                   : ""
                                               }
                                             >
-                                              {sMatch.playerB1?.name}{" "}
-                                              {sMatch.playerB2 &&
-                                                `and ${sMatch.playerB2?.name} `}
+                                              {sMatch.playersB.map((e, i) => {
+                                                const and =
+                                                  i === 0 ? `` : ` and `;
+                                                return and + e.name;
+                                              })}
                                             </span>
                                           </TableCell>
                                         </TableRow>
@@ -260,7 +265,9 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                           <TableBody className="header">
                             <TableRow key={round.name}>
                               <TableCell colSpan={4} scope="row" align="center">
-                                <strong>{capitalize(round.gameType)}</strong>
+                                <strong>
+                                  {capitalize(round?.gameType.name)}
+                                </strong>
                                 {" - "}
                                 {round.name} {" - TBD"}
                               </TableCell>
@@ -272,7 +279,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
               </Table>
             )}
 
-            {data?.meta?.pagination.pageCount === 0 && !loading && (
+            {data?.meta?.pagination?.pageCount === 0 && !loading && (
               <TableBody className="header">
                 <TableRow>
                   <TableCell colSpan={4} scope="row" align="center">
