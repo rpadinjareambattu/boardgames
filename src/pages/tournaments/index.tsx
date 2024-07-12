@@ -40,13 +40,14 @@ const About: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Shraddha Games</title>
+        <title>Shraddha Games | tournaments</title>
       </Head>
       <main className="flex min-h-screen flex-col items-center max-md:text-sm">
         <div className="container flex flex-wrap max-w-6xl px-6">
           <div className="font-mono font-bold from-zinc-200 flex-1 content-center max-md:col my-6">
             Tournaments
           </div>
+          {!!data?.data?.length && <span>No tournament found</span>}
           {data?.data?.map((el) => {
             return (
               <Card
