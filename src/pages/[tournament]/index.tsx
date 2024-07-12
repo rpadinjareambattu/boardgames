@@ -19,7 +19,7 @@ const Page = () => {
     !!tournament
   );
   const { putRequest } = usePutRequest<TournamentToUpdate, TournamentData>({
-    url: `tournaments/${tournament}`,
+    url: `v3tournaments/${tournament}`,
     data: {
       data: {
         views: tournamentData ? +tournamentData?.data?.views + 1 : 0,

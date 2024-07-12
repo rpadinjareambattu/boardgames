@@ -21,7 +21,7 @@ export const putTournamentViews = async (
   const apiService: AxiosInstance = createApiService();
 
   const response = await apiService.put<TournamentToUpdate>(
-    `tournaments/${id}`,
+    `v3tournaments/${id}`,
     {
       data: { views },
     }
