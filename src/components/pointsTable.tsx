@@ -10,8 +10,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import useApiService from "@/service/useApiService";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -22,18 +22,10 @@ interface TableData {
   name: string;
   points: number;
   played: number;
+  won: number; 
+  lost: number; 
 }
-interface GameList {
-  data: [
-    {
-      id: number;
-      attributes: {
-        name: string;
-        isActive: boolean;
-      };
-    }
-  ];
-}
+
 interface GameTypes {
   chess: number;
   ludo: number;
@@ -43,17 +35,14 @@ interface GameTypes {
 interface BannerProps {
   name: string;
 }
+type StatusType = "played" | "won" | "lost" | "points";
+
 const PointsTable: React.FC<BannerProps> = ({ name }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { game, tournament, tab } = router.query;
   const [tableData, setTableData] = useState<TableData[]>([]);
-  const played: GameTypes = {
-    chess: 5,
-    ludo: 5,
-    carroms: 5,
-    snakeAndLadder: 5,
-  };
+
   const { data, loading, error } = useApiService<RoundData>(
     "v3-rounds?queryType=matches&filters[gameType][name][$eq]=" +
       game +
@@ -87,8 +76,10 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
         const tt: TableData = {
           id,
           name: name,
-          points: calcPoints(id),
-          played: calcPlayed(id),
+          points: calcTeamStat(id, "points"),
+          played: calcTeamStat(id, "played"),
+          won: calcTeamStat(id, "won"),
+          lost: calcTeamStat(id, "lost"),
         };
         dd.push(tt);
       });
@@ -97,49 +88,49 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tLoading, loading, game]);
-  const calcPoints = (id: number) => {
-    let p = 0;
 
-    console.log("-->", data);
-    data?.data.map((round) => {
-      round.matches.map((match) => {
-        if (match.teamA.id === id) {
-          p += match?.teamAScore;
-        }
-        if (match.teamB.id === id) {
-          p += match?.teamBScore;
-        }
-      });
-    });
-    return p;
-  };
-  const calcPlayed = (id: number) => {
-    let p = 0;
-    data?.data.map((round) => {
-      round.matches.map((match) => {
-        if (match.teamA.id === id) {
-          if (match?.teamAScore != undefined) {
-            p++;
+  const calcTeamStat = (id: number, status: StatusType): number => {
+    let played = 0;
+    let won = 0;
+    let lost = 0;
+    let points = 0;
+
+    data?.data.forEach((round) => {
+      round?.matches.forEach((match) => {
+        if (match.teamA.id === id && match?.teamAScore !== undefined) {
+          played++;
+          if (match.teamAScore > match.teamBScore) {
+            won++;
+            points += match?.teamAScore;
+          } else if (match.teamAScore < match.teamBScore) {
+            lost++;
           }
         }
-        if (match.teamB.id === id) {
-          if (match?.teamBScore != undefined) {
-            p++;
+        if (match.teamB.id === id && match?.teamBScore !== undefined) {
+          played++;
+          if (match.teamBScore > match.teamAScore) {
+            won++;
+            points += match?.teamBScore;
+          } else if (match.teamBScore < match.teamAScore) {
+            lost++;
           }
         }
       });
     });
-    return p;
-  };
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
 
-      return params.toString();
-    },
-    [searchParams]
-  );
+    switch (status) {
+      case "played":
+        return played;
+      case "won":
+        return won;
+      case "lost":
+        return lost;
+      case "points":
+        return points;
+      default:
+        return 0;
+    }
+  };
   if (error) return <p>Error: {error.message}</p>;
 
   return (
@@ -167,6 +158,12 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
                     </TableCell>
                     <TableCell className="!py-1" align="center">
                       <small>Played</small>
+                    </TableCell>
+                    <TableCell className="!py-1" align="center">
+                      <small>Won</small>
+                    </TableCell>
+                    <TableCell className="!py-1" align="center">
+                      <small>Lost</small>
                     </TableCell>
                     <TableCell className="!py-1" align="center">
                       <small>Points</small>
@@ -200,8 +197,22 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
                             align="center"
                           >
                             {team.played}
-                            {"/"}
-                            {(played as any)[String(game)]}
+                          </TableCell>
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            className="!py-2"
+                            align="center"
+                          >
+                            {team.won}
+                          </TableCell>
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            className="!py-2"
+                            align="center"
+                          >
+                            {team.lost}
                           </TableCell>
                           <TableCell
                             component="th"
