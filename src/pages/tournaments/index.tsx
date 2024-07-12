@@ -15,7 +15,7 @@ const About: NextPageWithLayout = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { data, loading, error } = useApiService<TournamentListData>(
-    "tournaments?populate[media][fields][0]=name&populate[media][fields][1]=url&populate[cover][fields][1]=url"
+    "v3tournaments?populate[media][fields][0]=name&populate[media][fields][1]=url&populate[cover][fields][1]=url"
   );
   const createQueryString = useCallback(
     (name: string, value: string) => {

@@ -5,10 +5,8 @@ interface GameList {
   data: [
     {
       id: number;
-      attributes: {
-        name: string;
-        isActive: boolean;
-      };
+      name: string;
+      isActive: boolean;
     }
   ];
 }
@@ -17,11 +15,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const apiService = createApiService();
 
   try {
-    const response = await apiService.get<GameList>("v3tournament");
+    const response = await apiService.get<GameList>("v3tournaments");
     const data = response.data;
 
     // Find the first item where isActive is true
-    const activeItem = data.data.find((item) => item.attributes.isActive);
+    const activeItem =
+      data.data.find((item) => item.isActive) ||
+      data.data[data.data.length - 1];
 
     if (activeItem) {
       // Redirect to a page with the ID of the active item
