@@ -5,10 +5,8 @@ interface GameList {
   data: [
     {
       id: number;
-      attributes: {
-        name: string;
-        isActive: boolean;
-      };
+      name: string;
+      isActive: boolean;
     }
   ];
 }
@@ -21,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const data = response.data;
 
     // Find the first item where isActive is true
-    const activeItem = data.data.find((item) => item.attributes.isActive);
+    const activeItem = data.data.find((item) => item.isActive);
 
     if (activeItem) {
       // Redirect to a page with the ID of the active item
