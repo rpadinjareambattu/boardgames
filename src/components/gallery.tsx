@@ -1,5 +1,12 @@
 "use client";
-import { Box, CircularProgress, IconButton, Modal } from "@mui/material";
+import {
+  Backdrop,
+  Box,
+  CircularProgress,
+  IconButton,
+  Modal,
+  styled,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import useApiService from "@/service/useApiService";
 import { useRouter } from "next/router";
@@ -95,7 +102,9 @@ const Gallery: React.FC<BannerProps> = ({ name }) => {
 };
 
 export default Gallery;
-
+const CustomBackdrop = styled(Backdrop)({
+  backgroundColor: "rgba(0, 0, 0, 0.85)", // Adjust the opacity as needed
+});
 interface ImageGalleryModalProps {
   open: boolean;
   handleClose: () => void;
@@ -127,7 +136,7 @@ const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({
     transform: "translate(-50%, -50%)",
     width: "80%",
     maxWidth: 600,
-    bgcolor: "background.paper",
+    bgcolor: "black",
     border: "2px solid #000",
     boxShadow: 24,
     p: 4,
@@ -139,6 +148,7 @@ const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({
       onClose={handleClose}
       aria-labelledby="image-gallery-modal"
       aria-describedby="image-gallery-description"
+      BackdropComponent={CustomBackdrop}
     >
       <>
         <Box
@@ -166,7 +176,7 @@ const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({
           alt={`Image gallery`}
           layout="fill"
           objectFit="contain"
-          className="rounded-lg shadow-md"
+          className="rounded-lg shadow-md !w-11/12 !h-5/6 m-auto"
           onLoad={handleImageLoad}
         />
       </>
