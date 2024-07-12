@@ -47,7 +47,9 @@ const About: NextPageWithLayout = () => {
           <div className="font-mono font-bold from-zinc-200 flex-1 content-center max-md:col my-6">
             Tournaments
           </div>
-          {!!!data?.data?.length && <span>No tournament found</span>}
+          {!!!data?.data?.length && (
+            <div className="w-full">No tournament found</div>
+          )}
           {data?.data?.map((el) => {
             return (
               <Card
