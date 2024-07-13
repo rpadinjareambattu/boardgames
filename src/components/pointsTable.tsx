@@ -157,16 +157,24 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
                       <small>Team</small>
                     </TableCell>
                     <TableCell className="!py-1" align="center">
-                      <small>Played</small>
+                      <small>
+                        P<span className="max-md:hidden">layed</span>
+                      </small>
                     </TableCell>
                     <TableCell className="!py-1" align="center">
-                      <small>Won</small>
+                      <small>
+                        W<span className="max-md:hidden">on</span>
+                      </small>
                     </TableCell>
                     <TableCell className="!py-1" align="center">
-                      <small>Lost</small>
+                      <small>
+                        L<span className="max-md:hidden">ost</span>
+                      </small>
                     </TableCell>
                     <TableCell className="!py-1" align="center">
-                      <small>Points</small>
+                      <small>
+                        P<span className="max-md:hidden">oints</span>
+                      </small>
                     </TableCell>
                   </TableRow>
                 </TableHead>
