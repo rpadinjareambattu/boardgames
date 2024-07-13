@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 const pages = [
   { text: "matches", tab: "matches" },
   { text: "points table", tab: "table" },
+  { text: "Teams", tab: "teams" },
   { text: "Gallery", tab: "gallery" },
 ];
 

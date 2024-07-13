@@ -22,8 +22,8 @@ interface TableData {
   name: string;
   points: number;
   played: number;
-  won: number; 
-  lost: number; 
+  won: number;
+  lost: number;
 }
 
 interface GameTypes {
@@ -51,7 +51,7 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
     game != "" && tournament != ""
   );
   const { data: tData, loading: tLoading } = useApiService<TeamData>(
-    "teams",
+    "teams" + "?filters[v3tournaments][$eq]=" + tournament,
     true
   );
 

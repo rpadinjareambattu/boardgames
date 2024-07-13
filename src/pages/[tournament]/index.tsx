@@ -3,6 +3,7 @@ import Gallery from "@/components/gallery";
 import Header from "@/components/header";
 import Matches from "@/components/matches";
 import PointsTable from "@/components/pointsTable";
+import Team from "@/components/teams";
 import useApiService from "@/service/useApiService";
 import usePutRequest from "@/service/usePutRequest";
 import { TournamentData, TournamentToUpdate } from "@/types/tournament";
@@ -52,6 +53,9 @@ const Page = () => {
       )}
       {tab === "gallery" && (
         <Gallery name={tournamentData?.data?.name || "Tournament"} />
+      )}
+      {tab === "teams" && (
+        <Team name={tournamentData?.data?.name || "Tournament"} />
       )}
     </>
   );
