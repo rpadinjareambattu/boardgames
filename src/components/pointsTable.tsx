@@ -174,6 +174,7 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
                     <TableCell className="!py-1" align="center">
                       <small>
                         P<span className="max-md:hidden">oints</span>
+                        <span className="md:hidden">ts</span>
                       </small>
                     </TableCell>
                   </TableRow>
