@@ -158,7 +158,8 @@ const PointsTable: React.FC<BannerProps> = ({ name }) => {
                     </TableCell>
                     <TableCell className="!py-1" align="center">
                       <small>
-                        P<span className="max-md:hidden">layed</span>
+                        M<span className="max-md:hidden">atch </span>P
+                        <span className="max-md:hidden">layed</span>
                       </small>
                     </TableCell>
                     <TableCell className="!py-1" align="center">
