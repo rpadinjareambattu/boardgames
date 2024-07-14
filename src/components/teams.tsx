@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import useApiService from "@/service/useApiService";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { TeamData } from "@/types/team";
 
 interface PageProps {
   name: string;
