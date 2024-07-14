@@ -18,6 +18,7 @@ import { TeamData } from "@/types/team";
 
 interface TableData {
   id: number;
+  teamId: number;
   name: string;
   points: number;
   played: number;
@@ -30,23 +31,41 @@ interface PageProps {
 }
 type StatusType = "played" | "won" | "lost" | "points";
 
-const PointsTable: React.FC<PageProps> = ({ name }) => {
+const LeaderBoard: React.FC<PageProps> = ({ name }) => {
   const router = useRouter();
   const { game, tournament, tab } = router.query;
   const [tableData, setTableData] = useState<TableData[]>([]);
 
   const { data, loading, error } = useApiService<RoundData>(
-    "v3-rounds?queryType=matches&filters[gameType][name][$eq]=" +
-      game +
-      "&filters[v_3_tournament][$eq]=" +
-      tournament,
-    game != "" && tournament != ""
+    "v3-rounds?queryType=matches&filters[v_3_tournament][$eq]=" + tournament,
+    tournament != ""
   );
-  const { data: tData, loading: tLoading } = useApiService<TeamData>(
-    "teams?filters[v3tournaments][$eq]=" + tournament,
-    true
+  const { data: teamData, loading: teamLoading } = useApiService<TeamData>(
+    `teams?filters[v3tournaments][$eq]=${tournament}&populate[players][fields][0]=name&fields[0]=id`,
+    tournament != ""
   );
 
+  useEffect(() => {
+    if (teamData && !tableData.length && data) {
+      const dd: TableData[] = [];
+      teamData.data.forEach((element) => {
+        element.players.forEach(({ id, name }) => {
+          const tt: TableData = {
+            id,
+            name: name,
+            teamId: element.id,
+            points: calcTeamStat(id, "points", data),
+            played: calcTeamStat(id, "played", data),
+            won: calcTeamStat(id, "won", data),
+            lost: calcTeamStat(id, "lost", data),
+          };
+          dd.push(tt);
+        });
+      });
+      return setTableData([...tableData, ...dd]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamData, data]);
   useEffect(() => {
     if (!tab && tournament) {
       router.push(
@@ -61,26 +80,6 @@ const PointsTable: React.FC<PageProps> = ({ name }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
-  useEffect(() => {
-    if (!loading && !tLoading && data && tData) {
-      const dd: TableData[] = [];
-      tData.data.map(({ id, name }) => {
-        const tt: TableData = {
-          id,
-          name: name,
-          points: calcTeamStat(id, "points", data),
-          played: calcTeamStat(id, "played", data),
-          won: calcTeamStat(id, "won", data),
-          lost: calcTeamStat(id, "lost", data),
-        };
-        dd.push(tt);
-      });
-      return setTableData(dd);
-    }
-    return () => {};
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tLoading, loading, game]);
-
   if (error) return <p>Error: {error.message}</p>;
 
   return (
@@ -89,7 +88,7 @@ const PointsTable: React.FC<PageProps> = ({ name }) => {
         <title>Points Table | {name} </title>
       </Head>
       <main className="flex min-h-screen flex-col items-center max-md:text-sm">
-        <div className="container flex flex-wrap max-w-6xl px-6">
+        <div className="container flex flex-wrap max-w-6xl px-6 pb-5">
           <TableContainer component={Paper} className="justify-center flex">
             {!loading && (
               <Table
@@ -201,7 +200,7 @@ const PointsTable: React.FC<PageProps> = ({ name }) => {
   );
 };
 
-export default PointsTable;
+export default LeaderBoard;
 
 const calcTeamStat = (
   id: number,
@@ -214,25 +213,39 @@ const calcTeamStat = (
   let points = 0;
 
   data?.data.forEach((round) => {
-    round?.matches.forEach((match) => {
-      if (match.teamA?.id === id && match?.teamAScore !== undefined) {
-        played++;
-        if (match.teamAScore > match.teamBScore) {
-          won++;
-          points += match?.teamAScore;
-        } else if (match.teamAScore < match.teamBScore) {
-          lost++;
+    round.matches.forEach((match) => {
+      let sMatchPoints =
+        match.teamAScore > match.teamBScore
+          ? match.teamAScore
+          : match.teamBScore;
+      match.sub_matches.forEach((subMatch) => {
+        if (
+          subMatch.playersA.some((player) => player.id === id) &&
+          subMatch.teamAScore !== undefined
+        ) {
+          played++;
+          if (subMatch.teamAScore > subMatch.teamBScore) {
+            won++;
+            points += sMatchPoints;
+          } else if (subMatch.teamAScore < subMatch.teamBScore) {
+            lost++;
+            points -= Number((sMatchPoints / 2).toFixed(1));
+          }
         }
-      }
-      if (match.teamB?.id === id && match?.teamBScore !== undefined) {
-        played++;
-        if (match.teamBScore > match.teamAScore) {
-          won++;
-          points += match?.teamBScore;
-        } else if (match.teamBScore < match.teamAScore) {
-          lost++;
+        if (
+          subMatch.playersB.some((player) => player.id === id) &&
+          subMatch.teamBScore !== undefined
+        ) {
+          played++;
+          if (subMatch.teamBScore > subMatch.teamAScore) {
+            won++;
+            points += sMatchPoints;
+          } else if (subMatch.teamBScore < subMatch.teamAScore) {
+            lost++;
+            points -= Number((sMatchPoints / 2).toFixed(1));
+          }
         }
-      }
+      });
     });
   });
 

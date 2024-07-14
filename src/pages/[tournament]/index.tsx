@@ -1,6 +1,7 @@
 import Banner from "@/components/banner";
 import Gallery from "@/components/gallery";
 import Header from "@/components/header";
+import LeaderBoard from "@/components/leaderBoard";
 import Matches from "@/components/matches";
 import PointsTable from "@/components/pointsTable";
 import Team from "@/components/teams";
@@ -56,6 +57,9 @@ const Page = () => {
       )}
       {tab === "teams" && (
         <Team name={tournamentData?.data?.name || "Tournament"} />
+      )}
+      {tab === "leaderBoard" && (
+        <LeaderBoard name={tournamentData?.data?.name || "Tournament"} />
       )}
     </>
   );

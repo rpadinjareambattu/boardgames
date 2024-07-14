@@ -8,9 +8,10 @@ import { CircularProgress, Dialog, DialogContent } from "@mui/material";
 import { Tournament } from "@/types/tournament";
 import { useRouter } from "next/router";
 
-const pages = [
+const tabs = [
   { text: "matches", tab: "matches" },
   { text: "points table", tab: "table" },
+  { text: "LeaderBoard", tab: "leaderBoard" },
   { text: "Teams", tab: "teams" },
   { text: "Gallery", tab: "gallery" },
 ];
@@ -186,7 +187,7 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
           </div>
           <div className="w-full pt-4">
             <Box>
-              {pages.map((page) => (
+              {tabs.map((page) => (
                 <a
                   onClick={() => handleTabChange(page.tab)}
                   key={page.text}

@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { useRouter } from "next/router";
-import { useState, useEffect, FormEvent, useRef } from "react";
+import { useState, FormEvent, useRef } from "react";
 import { FaFilter } from "react-icons/fa";
 
 const style = {
@@ -26,7 +26,7 @@ export default function Filter() {
   const handleClose = () => setOpen(false);
 
   const router = useRouter();
-  const { date, team } = router.query;
+  const { date, team, tournament } = router.query;
   const handleFilter = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     router.push(
@@ -57,7 +57,9 @@ export default function Filter() {
       selectInput.current.value = "";
     }
   };
-  const { data } = useApiService<TeamData>("teams");
+  const { data } = useApiService<TeamData>(
+    "teams?filters[v3tournaments][$eq]=" + tournament
+  );
   return (
     <div>
       <Button
