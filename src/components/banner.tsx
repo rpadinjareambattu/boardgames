@@ -186,7 +186,7 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
             {loading && <CircularProgress size="2rem" />}
           </div>
         </div>
-        <div className="w-full ml-6 pt-4 whitespace-nowrap overflow-auto w-full">
+        <div className="container px-6 max-w-6xl w-full pt-4 whitespace-nowrap overflow-auto w-full">
           <Box>
             {tabs.map((page) => (
               <a
