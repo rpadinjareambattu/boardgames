@@ -111,8 +111,8 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
   };
 
   return (
-    <div className="w-full flex-wrap  flex justify-center">
-      <div className="w-full flex justify-center bg-gradient-to-b from-blue-200 to-blue-500">
+    <div className="w-full flex-wrap  flex justify-center mb-5">
+      <div className="w-full flex-wrap flex justify-center bg-gradient-to-b from-blue-200 to-blue-500">
         <div className="container flex flex-wrap max-w-6xl px-6 pt-5">
           <div className="pr-4">
             <Image
@@ -185,24 +185,23 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
             )}
             {loading && <CircularProgress size="2rem" />}
           </div>
-          <div className="w-full pt-4">
-            <Box>
-              {tabs.map((page) => (
-                <a
-                  onClick={() => handleTabChange(page.tab)}
-                  key={page.text}
-                  className={`${
-                    tab === page.tab ? "!font-bold !border-white" : ""
-                  } cursor-pointer inline-block uppercase border-blue-700 border-b-2 px-2 py-1 fir bg-blue-700 text-white first-of-type:pl-4 last-of-type:pr-4 first-of-type:rounded-tl-md last-of-type:rounded-tr-md hover:border-white max-md:text-xs select-none`}
-                >
-                  {page.text}
-                </a>
-              ))}
-            </Box>
-          </div>
+        </div>
+        <div className="w-full ml-6 pt-4 whitespace-nowrap overflow-auto w-full">
+          <Box>
+            {tabs.map((page) => (
+              <a
+                onClick={() => handleTabChange(page.tab)}
+                key={page.text}
+                className={`${
+                  tab === page.tab ? "!font-bold !border-white" : ""
+                } cursor-pointer inline-block uppercase border-blue-700 border-b-2 px-2 py-1 fir bg-blue-700 text-white first-of-type:pl-4 last-of-type:pr-4 first-of-type:rounded-tl-md last-of-type:mr-6 last-of-type:rounded-tr-md hover:border-white max-md:text-xs select-none`}
+              >
+                {page.text}
+              </a>
+            ))}
+          </Box>
         </div>
       </div>
-      <div className="container flex flex-wrap max-w-6xl px-6 pt-5"></div>
     </div>
   );
 };
