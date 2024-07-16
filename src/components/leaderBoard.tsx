@@ -37,9 +37,12 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
   const [tableData, setTableData] = useState<TableData[]>([]);
 
   const { data, loading, error } = useApiService<RoundData>(
-    "v3-rounds?queryType=matches&filters[v_3_tournament][$eq]=" +
-      tournament +
-      "&populate[roundDetails][populate][players][populate][players][fields]=name",
+    "v3-rounds?" +
+      (game === "prediction"
+        ? "populate[roundDetails][populate][players][populate][players][fields]=name"
+        : "queryType=matches") +
+      "&filters[v_3_tournament][$eq]=" +
+      tournament,
     tournament != ""
   );
   const { data: teamData, loading: teamLoading } = useApiService<TeamData>(
@@ -49,12 +52,10 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
 
   useEffect(() => {
     if (teamData && !tableData.length && data) {
-      if (data?.data[0]?.roundDetails) {
+      if (data?.data[0]?.roundDetails?.length) {
         const dd: TableData[] = [];
-        data?.data[0]?.roundDetails[0].players?.forEach(
+        data?.data[0]?.roundDetails[0]?.players?.forEach(
           ({ id, players, score }) => {
-            console.log({ id, players, score }, "<====");
-
             const tt: TableData = {
               id,
               name: players.reduce((acc, player, index) => {
@@ -242,7 +243,7 @@ const calcTeamStat = (
   let points = 0;
 
   data?.data.forEach((round) => {
-    round.matches.forEach((match) => {
+    round.matches?.forEach((match) => {
       let sMatchPoints =
         match.teamAScore > match.teamBScore
           ? match.teamAScore
