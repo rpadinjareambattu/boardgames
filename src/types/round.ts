@@ -36,6 +36,22 @@ export interface Round {
       teamBScore: number;
     }
   ];
+  roundDetails: [
+    {
+      players: [
+        {
+          id: number;
+          score: number;
+          players: [
+            {
+              id: number;
+              name: string;
+            }
+          ];
+        }
+      ];
+    }
+  ];
 }
 
 export interface Name {

@@ -7,7 +7,7 @@ import PointsTable from "@/components/pointsTable";
 import Team from "@/components/teams";
 import useApiService from "@/service/useApiService";
 import usePutRequest from "@/service/usePutRequest";
-import { TournamentData, TournamentToUpdate } from "@/types/tournament";
+import { PageView, PageViewData, TournamentData } from "@/types/tournament";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -20,24 +20,29 @@ const Page = () => {
     `v3tournaments/${tournament}?populate[cover][fields][0]=url&populate[games][fields][0]=name&populate[activeGame][fields][0]=name&fields[0]=name&fields[1]=views&fields[2]=startDate&fields[3]=endDate`,
     !!tournament
   );
-  const { putRequest } = usePutRequest<TournamentToUpdate, TournamentData>({
-    url: `v3tournaments/${tournament}`,
+  const { data: pageView, loading: pageViewLoading } =
+    useApiService<PageViewData>(
+      `page-views?filters[v3tournament][$eq]=${tournament}`,
+      !!tournament
+    );
+  const { putRequest } = usePutRequest<PageView, TournamentData>({
+    url: `page-views/${pageView?.data[0]?.id}`,
     data: {
       data: {
-        views: tournamentData ? +tournamentData?.data?.views + 1 : 0,
+        views: pageView?.data?.length ? +pageView?.data[0]?.views + 1 : 0,
       },
     },
   });
   useEffect(() => {
     // todo
     // && process.env.NODE_ENV === "production"
-    if (tournamentData?.data && !isCalled) {
+    if (pageView?.data[0]?.id && !isCalled) {
       putRequest();
       setIsCalled(true);
     }
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tournamentData]);
+  }, [pageView]);
 
   return (
     <>
@@ -45,6 +50,7 @@ const Page = () => {
       <Banner
         tournament={!!tournamentData ? tournamentData.data : undefined}
         loading={loading}
+        views={pageView?.data[0]?.views || 0}
       />
       {tab === "matches" && (
         <Matches name={tournamentData?.data?.name || "Tournament"} />

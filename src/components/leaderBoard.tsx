@@ -13,17 +13,17 @@ import { useEffect, useState } from "react";
 import useApiService from "@/service/useApiService";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { RoundData } from "@/types/round";
 import { TeamData } from "@/types/team";
+import { RoundData } from "@/types/round";
 
 interface TableData {
   id: number;
-  teamId: number;
-  name: string;
+  teamId?: number;
+  name?: string;
   points: number;
-  played: number;
-  won: number;
-  lost: number;
+  played?: number;
+  won?: number;
+  lost?: number;
 }
 
 interface PageProps {
@@ -37,7 +37,9 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
   const [tableData, setTableData] = useState<TableData[]>([]);
 
   const { data, loading, error } = useApiService<RoundData>(
-    "v3-rounds?queryType=matches&filters[v_3_tournament][$eq]=" + tournament,
+    "v3-rounds?queryType=matches&filters[v_3_tournament][$eq]=" +
+      tournament +
+      "&populate[roundDetails][populate][players][populate][players][fields]=name",
     tournament != ""
   );
   const { data: teamData, loading: teamLoading } = useApiService<TeamData>(
@@ -47,22 +49,41 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
 
   useEffect(() => {
     if (teamData && !tableData.length && data) {
-      const dd: TableData[] = [];
-      teamData.data.forEach((element) => {
-        element.players.forEach(({ id, name }) => {
-          const tt: TableData = {
-            id,
-            name: name,
-            teamId: element.id,
-            points: calcTeamStat(id, "points", data),
-            played: calcTeamStat(id, "played", data),
-            won: calcTeamStat(id, "won", data),
-            lost: calcTeamStat(id, "lost", data),
-          };
-          dd.push(tt);
+      if (data?.data[0]?.roundDetails) {
+        const dd: TableData[] = [];
+        data?.data[0]?.roundDetails[0].players?.forEach(
+          ({ id, players, score }) => {
+            console.log({ id, players, score }, "<====");
+
+            const tt: TableData = {
+              id,
+              name: players.reduce((acc, player, index) => {
+                return acc + (index > 0 ? " and " : "") + player.name;
+              }, ""),
+              points: score,
+            };
+            dd.push(tt);
+          }
+        );
+        return setTableData([...tableData, ...dd]);
+      } else {
+        const dd: TableData[] = [];
+        teamData.data.forEach((element) => {
+          element.players.forEach(({ id, name }) => {
+            const tt: TableData = {
+              id,
+              name: name,
+              teamId: element.id,
+              points: calcTeamStat(id, "points", data),
+              played: calcTeamStat(id, "played", data),
+              won: calcTeamStat(id, "won", data),
+              lost: calcTeamStat(id, "lost", data),
+            };
+            dd.push(tt);
+          });
         });
-      });
-      return setTableData([...tableData, ...dd]);
+        return setTableData([...tableData, ...dd]);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamData, data]);
@@ -103,24 +124,28 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                       <small>#</small>
                     </TableCell>
                     <TableCell className="!py-1">
-                      <small>Team</small>
+                      <small>Name</small>
                     </TableCell>
-                    <TableCell className="!py-1" align="center">
-                      <small>
-                        M<span className="max-md:hidden">atch </span>P
-                        <span className="max-md:hidden">layed</span>
-                      </small>
-                    </TableCell>
-                    <TableCell className="!py-1" align="center">
-                      <small>
-                        W<span className="max-md:hidden">on</span>
-                      </small>
-                    </TableCell>
-                    <TableCell className="!py-1" align="center">
-                      <small>
-                        L<span className="max-md:hidden">ost</span>
-                      </small>
-                    </TableCell>
+                    {game != "prediction" && (
+                      <>
+                        <TableCell className="!py-1" align="center">
+                          <small>
+                            M<span className="max-md:hidden">atch </span>P
+                            <span className="max-md:hidden">layed</span>
+                          </small>
+                        </TableCell>
+                        <TableCell className="!py-1" align="center">
+                          <small>
+                            W<span className="max-md:hidden">on</span>
+                          </small>
+                        </TableCell>
+                        <TableCell className="!py-1" align="center">
+                          <small>
+                            L<span className="max-md:hidden">ost</span>
+                          </small>
+                        </TableCell>
+                      </>
+                    )}
                     <TableCell className="!py-1" align="center">
                       <small>
                         P<span className="max-md:hidden">oints</span>
@@ -149,30 +174,34 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                           >
                             {team.name}
                           </TableCell>
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            className="!py-2"
-                            align="center"
-                          >
-                            {team.played}
-                          </TableCell>
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            className="!py-2"
-                            align="center"
-                          >
-                            {team.won}
-                          </TableCell>
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            className="!py-2"
-                            align="center"
-                          >
-                            {team.lost}
-                          </TableCell>
+                          {game != "prediction" && (
+                            <>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                className="!py-2"
+                                align="center"
+                              >
+                                {team.played}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                className="!py-2"
+                                align="center"
+                              >
+                                {team.won}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                className="!py-2"
+                                align="center"
+                              >
+                                {team.lost}
+                              </TableCell>
+                            </>
+                          )}
                           <TableCell
                             component="th"
                             scope="row"

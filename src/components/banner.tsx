@@ -2,17 +2,16 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Image from "next/image";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useCallback } from "react";
-import { CircularProgress, Dialog, DialogContent } from "@mui/material";
+import { useEffect } from "react";
+import { CircularProgress, Dialog } from "@mui/material";
 import { Tournament } from "@/types/tournament";
 import { useRouter } from "next/router";
 
 const tabs = [
-  { text: "matches", tab: "matches" },
-  { text: "points table", tab: "table" },
+  { text: "matches", tab: "matches", hideFor: ["prediction"] },
+  { text: "points table", tab: "table", hideFor: ["prediction"] },
   { text: "LeaderBoard", tab: "leaderBoard" },
-  { text: "Teams", tab: "teams" },
+  { text: "Teams", tab: "teams", hideFor: ["prediction"] },
   { text: "Gallery", tab: "gallery" },
 ];
 
@@ -28,18 +27,25 @@ interface GameList {
 interface BannerProps {
   tournament?: Tournament;
   loading: boolean;
+  views: number;
 }
-const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
+const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
   const router = useRouter();
 
   const { tab, game, tournament: tId, ...otherQueries } = router.query;
   const gameInput = React.useRef<HTMLSelectElement>(null);
   useEffect(() => {
-    if (!tab && tId) {
+    if (!tab && tId && tournament?.activeGame?.name) {
       router.push(
         {
           pathname: router.pathname,
-          query: { ...router.query, tab: "matches" },
+          query: {
+            ...router.query,
+            tab:
+              tournament?.activeGame.name === "prediction"
+                ? "leaderBoard"
+                : "matches",
+          },
         },
         undefined,
         { shallow: true }
@@ -162,7 +168,7 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
                         : " to TBD")
                     : "Date: TBD"}
                 </span>
-                {tournament?.views || "0"} Views
+                {views} Views
               </p>
             </div>
             {!loading && (
@@ -186,19 +192,22 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading }) => {
             {loading && <CircularProgress size="2rem" />}
           </div>
         </div>
-        <div className="container px-6 max-w-6xl w-full pt-4 whitespace-nowrap overflow-auto w-full">
+        <div className="container px-6 max-w-6xl w-full pt-4 whitespace-nowrap overflow-auto min-h-9 max-md:min-h-7">
           <Box>
-            {tabs.map((page) => (
-              <a
-                onClick={() => handleTabChange(page.tab)}
-                key={page.text}
-                className={`${
-                  tab === page.tab ? "!font-bold !border-white" : ""
-                } cursor-pointer inline-block uppercase border-blue-700 border-b-2 px-2 py-1 fir bg-blue-700 text-white first-of-type:pl-4 last-of-type:pr-4 first-of-type:rounded-tl-md last-of-type:mr-6 last-of-type:rounded-tr-md hover:border-white max-md:text-xs select-none`}
-              >
-                {page.text}
-              </a>
-            ))}
+            {tabs.map((page) => {
+              if (page.hideFor?.includes(String(game)) || !game) return null;
+              return (
+                <a
+                  onClick={() => handleTabChange(page.tab)}
+                  key={page.text}
+                  className={`${
+                    tab === page.tab ? "!font-bold !border-white" : ""
+                  } cursor-pointer inline-block uppercase border-blue-700 border-b-2 px-2 py-1 fir bg-blue-700 text-white first-of-type:pl-4 last-of-type:pr-4 first-of-type:rounded-tl-md last-of-type:mr-6 last-of-type:rounded-tr-md hover:border-white max-md:text-xs select-none`}
+                >
+                  {page.text}
+                </a>
+              );
+            })}
           </Box>
         </div>
       </div>

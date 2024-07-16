@@ -35,10 +35,21 @@ export interface Tournament {
   ];
   activeGame: {
     id: number;
+    name: string;
   };
 }
-export interface TournamentToUpdate {
+
+export interface PageViewData {
+  data: [
+    {
+      views: number;
+      id?: number;
+    }
+  ];
+}
+export interface PageView {
   data: {
     views: number;
+    id?: number;
   };
 }
