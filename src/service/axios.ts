@@ -1,4 +1,3 @@
-import { TournamentToUpdate } from "@/types/tournament";
 import axios, { AxiosInstance } from "axios";
 
 export const createApiService = (): AxiosInstance => {
@@ -12,20 +11,4 @@ export const createApiService = (): AxiosInstance => {
     },
   });
   return api;
-};
-
-export const putTournamentViews = async (
-  id: number,
-  views: number
-): Promise<TournamentToUpdate> => {
-  const apiService: AxiosInstance = createApiService();
-
-  const response = await apiService.put<TournamentToUpdate>(
-    `v3tournaments/${id}`,
-    {
-      data: { views },
-    }
-  );
-
-  return response.data;
 };
