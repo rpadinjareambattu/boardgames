@@ -269,7 +269,7 @@ const calcTeamStat = (
       match.sub_matches.forEach((subMatch) => {
         if (
           subMatch.playersA.some((player) => player.id === id) &&
-          subMatch.teamAScore !== null
+          subMatch.teamAScore != null
         ) {
           played++;
           if (subMatch.teamAScore > subMatch.teamBScore) {
@@ -282,7 +282,7 @@ const calcTeamStat = (
         }
         if (
           subMatch.playersB.some((player) => player.id === id) &&
-          subMatch.teamBScore !== null
+          subMatch.teamBScore != null
         ) {
           played++;
           if (subMatch.teamBScore > subMatch.teamAScore) {
