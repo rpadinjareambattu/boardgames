@@ -14,6 +14,8 @@ const tabs = [
   { text: "Teams", tab: "teams", hideFor: ["prediction"] },
   { text: "Gallery", tab: "gallery" },
 ];
+// hide select based on tab
+const hideSelect = ["leaderBoard", "gallery", "teams"];
 
 interface GameList {
   data: [
@@ -159,7 +161,7 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
                 {views} Views
               </p>
             </div>
-            {!loading && (
+            {!loading && !hideSelect.includes(String(tab)) && (
               <select
                 onChange={handleChange}
                 ref={gameInput}

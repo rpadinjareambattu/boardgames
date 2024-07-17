@@ -19,7 +19,7 @@ import { RoundData } from "@/types/round";
 interface TableData {
   id: number;
   teamId?: number;
-  name?: string;
+  name: string;
   points: number;
   played?: number;
   won?: number;
@@ -174,7 +174,13 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                   </TableHead>
                   <TableBody>
                     {tableData
-                      ?.sort((a, b) => b.points - a.points)
+                      ?.sort((a, b) => {
+                        if (b.points === a.points) {
+                          return a.name.localeCompare(b.name);
+                        }
+                        return b.points - a.points;
+                      })
+                      .filter((a) => a.played !== 0)
                       .map((team, i) => {
                         return (
                           <TableRow key={team.id}>
