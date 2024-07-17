@@ -111,113 +111,131 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
       </Head>
       <main className="flex min-h-screen flex-col items-center max-md:text-sm">
         <div className="container flex flex-wrap max-w-6xl px-6 pb-5">
-          <TableContainer component={Paper} className="justify-center flex">
-            {!loading && (
-              <Table
-                sx={{
-                  width: { xs: "100%", sm: "100%" },
-                }}
-                aria-label="simple table"
-              >
-                <TableHead className="thead">
-                  <TableRow>
-                    <TableCell className="!py-1 !max-w-10 w-5">
-                      <small>#</small>
-                    </TableCell>
-                    <TableCell className="!py-1">
-                      <small>Name</small>
-                    </TableCell>
-                    {game != "prediction" && (
-                      <>
-                        <TableCell className="!py-1" align="center">
-                          <small>
-                            M<span className="max-md:hidden">atch </span>P
-                            <span className="max-md:hidden">layed</span>
-                          </small>
-                        </TableCell>
-                        <TableCell className="!py-1" align="center">
-                          <small>
-                            W<span className="max-md:hidden">on</span>
-                          </small>
-                        </TableCell>
-                        <TableCell className="!py-1" align="center">
-                          <small>
-                            L<span className="max-md:hidden">ost</span>
-                          </small>
-                        </TableCell>
-                      </>
-                    )}
-                    <TableCell className="!py-1" align="center">
-                      <small>
-                        P<span className="max-md:hidden">oints</span>
-                        <span className="md:hidden">ts</span>
-                      </small>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {tableData
-                    ?.sort((a, b) => b.points - a.points)
-                    .map((team, i) => {
-                      return (
-                        <TableRow key={team.id}>
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            className="!py-2 !max-w-10"
-                          >
-                            {i + 1}
+          {game === "prediction" && !tableData.length && !loading ? (
+            <div className="w-full p-8 bg-white border-2 rounded-lg">
+              <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white md:text-3xl lg:text-4xl block">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+                  Results
+                </span>{" "}
+                Are On Their Way!
+              </h2>
+              <h2 className="mb-4 text-2xl font-bold leading-none tracking-tight text-gray-900 md:text-3xl dark:text-white">
+                We appreciate your enthusiasm and participation.
+              </h2>
+              <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+                Our team is working hard to finalize the results. Check back
+                soon to see if you are one of the winners!
+              </p>
+            </div>
+          ) : (
+            <TableContainer component={Paper} className="justify-center flex">
+              {!loading && (
+                <Table
+                  sx={{
+                    width: { xs: "100%", sm: "100%" },
+                  }}
+                  aria-label="simple table"
+                >
+                  <TableHead className="thead">
+                    <TableRow>
+                      <TableCell className="!py-1 !max-w-10 w-5">
+                        <small>#</small>
+                      </TableCell>
+                      <TableCell className="!py-1">
+                        <small>Name</small>
+                      </TableCell>
+                      {game != "prediction" && (
+                        <>
+                          <TableCell className="!py-1" align="center">
+                            <small>
+                              M<span className="max-md:hidden">atch </span>P
+                              <span className="max-md:hidden">layed</span>
+                            </small>
                           </TableCell>
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            className="!py-2"
-                          >
-                            {team.name}
+                          <TableCell className="!py-1" align="center">
+                            <small>
+                              W<span className="max-md:hidden">on</span>
+                            </small>
                           </TableCell>
-                          {game != "prediction" && (
-                            <>
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                className="!py-2"
-                                align="center"
-                              >
-                                {team.played}
-                              </TableCell>
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                className="!py-2"
-                                align="center"
-                              >
-                                {team.won}
-                              </TableCell>
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                className="!py-2"
-                                align="center"
-                              >
-                                {team.lost}
-                              </TableCell>
-                            </>
-                          )}
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            className="!py-2"
-                            align="center"
-                          >
-                            {team.points}
+                          <TableCell className="!py-1" align="center">
+                            <small>
+                              L<span className="max-md:hidden">ost</span>
+                            </small>
                           </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                </TableBody>
-              </Table>
-            )}
-          </TableContainer>
+                        </>
+                      )}
+                      <TableCell className="!py-1" align="center">
+                        <small>
+                          P<span className="max-md:hidden">oints</span>
+                          <span className="md:hidden">ts</span>
+                        </small>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {tableData
+                      ?.sort((a, b) => b.points - a.points)
+                      .map((team, i) => {
+                        return (
+                          <TableRow key={team.id}>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              className="!py-2 !max-w-10"
+                            >
+                              {i + 1}
+                            </TableCell>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              className="!py-2"
+                            >
+                              {team.name}
+                            </TableCell>
+                            {game != "prediction" && (
+                              <>
+                                <TableCell
+                                  component="th"
+                                  scope="row"
+                                  className="!py-2"
+                                  align="center"
+                                >
+                                  {team.played}
+                                </TableCell>
+                                <TableCell
+                                  component="th"
+                                  scope="row"
+                                  className="!py-2"
+                                  align="center"
+                                >
+                                  {team.won}
+                                </TableCell>
+                                <TableCell
+                                  component="th"
+                                  scope="row"
+                                  className="!py-2"
+                                  align="center"
+                                >
+                                  {team.lost}
+                                </TableCell>
+                              </>
+                            )}
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              className="!py-2"
+                              align="center"
+                            >
+                              {team.points}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              )}
+            </TableContainer>
+          )}
 
           {loading && (
             <div className="mt-20 w-full justify-center items-center flex">
