@@ -27,7 +27,7 @@ interface GameList {
 interface BannerProps {
   tournament?: Tournament;
   loading: boolean;
-  views: number;
+  views: number | string;
 }
 const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
   const router = useRouter();
@@ -36,20 +36,16 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
   const gameInput = React.useRef<HTMLSelectElement>(null);
   useEffect(() => {
     if (!tab && tId && tournament?.activeGame?.name) {
-      router.push(
-        {
-          pathname: router.pathname,
-          query: {
-            ...router.query,
-            tab:
-              tournament?.activeGame.name === "prediction"
-                ? "leaderBoard"
-                : "matches",
-          },
+      router.replace({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          tab:
+            tournament?.activeGame.name === "prediction"
+              ? "leaderBoard"
+              : "matches",
         },
-        undefined,
-        { shallow: true }
-      );
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, otherQueries, router]);
@@ -59,27 +55,19 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
     );
     if (activeItem && gameInput.current && !game) {
       gameInput.current.value = activeItem.name;
-      router.push(
-        {
-          pathname: router.pathname,
-          query: { ...router.query, game: activeItem.name },
-        },
-        undefined,
-        { shallow: true }
-      );
+      router.replace({
+        pathname: router.pathname,
+        query: { ...router.query, game: activeItem.name },
+      });
     }
     if (!activeItem && gameInput.current && !game) {
       activeItem = tournament?.games?.[0];
       if (activeItem) {
         gameInput.current.value = activeItem.name;
-        router.push(
-          {
-            pathname: router.pathname,
-            query: { ...router.query, game: activeItem.name },
-          },
-          undefined,
-          { shallow: true }
-        );
+        router.replace({
+          pathname: router.pathname,
+          query: { ...router.query, game: activeItem.name },
+        });
       }
     }
     return () => {};

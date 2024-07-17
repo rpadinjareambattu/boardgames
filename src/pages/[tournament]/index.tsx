@@ -17,32 +17,29 @@ const Page = () => {
   const { tab, tournament } = router.query;
 
   const { data: tournamentData, loading } = useApiService<TournamentData>(
-    `v3tournaments/${tournament}?populate[cover][fields][0]=url&populate[games][fields][0]=name&populate[activeGame][fields][0]=name&fields[0]=name&fields[1]=views&fields[2]=startDate&fields[3]=endDate`,
+    `v3tournaments/${tournament}?populate[cover][fields][0]=url&populate[games][fields][0]=name&populate[activeGame][fields][0]=name&fields[0]=name&fields[2]=startDate&fields[3]=endDate&populate[page_view][fields][0]=views`,
     !!tournament
   );
-  const { data: pageView, loading: pageViewLoading } =
-    useApiService<PageViewData>(
-      `page-views?filters[v3tournament][$eq]=${tournament}`,
-      !!tournament
-    );
   const { putRequest } = usePutRequest<PageView, TournamentData>({
-    url: `page-views/${pageView?.data[0]?.id}`,
+    url: `page-views/${tournamentData?.data.page_view?.id}`,
     data: {
       data: {
-        views: pageView?.data?.length ? +pageView?.data[0]?.views + 1 : 0,
+        views: tournamentData?.data.page_view?.id
+          ? +tournamentData?.data.page_view?.views + 1
+          : 0,
       },
     },
   });
   useEffect(() => {
     // todo
     // && process.env.NODE_ENV === "production"
-    if (pageView?.data[0]?.id && !isCalled) {
+    if (tournamentData?.data.page_view?.id && !isCalled) {
       putRequest();
       setIsCalled(true);
     }
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageView]);
+  }, [tournamentData]);
 
   return (
     <>
@@ -50,7 +47,7 @@ const Page = () => {
       <Banner
         tournament={!!tournamentData ? tournamentData.data : undefined}
         loading={loading}
-        views={pageView?.data[0]?.views || 0}
+        views={tournamentData?.data.page_view?.views || "NA"}
       />
       {tab === "matches" && (
         <Matches name={tournamentData?.data?.name || "Tournament"} />

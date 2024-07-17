@@ -15,7 +15,6 @@ export interface Tournament {
   id: number;
   name: string;
   isActive: boolean;
-  views: number;
   startDate: string;
   endDate: string;
   rounds: [Round];
@@ -36,6 +35,10 @@ export interface Tournament {
   activeGame: {
     id: number;
     name: string;
+  };
+  page_view: {
+    views: number;
+    id: number;
   };
 }
 

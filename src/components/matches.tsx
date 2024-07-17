@@ -82,8 +82,8 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                           .filter((match) => {
                             if (!team) return match;
                             return (
-                              +team === match.teamA.id ||
-                              +team === match.teamB.id
+                              +team === match.teamA?.id ||
+                              +team === match.teamB?.id
                             );
                           })
                           .map((match, i) => (
