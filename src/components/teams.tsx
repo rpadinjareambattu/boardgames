@@ -53,27 +53,29 @@ const Team: React.FC<PageProps> = ({ name }) => {
       <Head>
         <title>Points Table | {name} </title>
       </Head>
-      <main className="flex min-h-screen flex-col items-center max-md:text-sm">
+      <main className="flex min-h-screen flex-col items-center max-md:text-sm pb-5">
         <div className="container flex flex-wrap max-w-6xl px-6">
           {loading ? (
             <div className="mt-20 w-full justify-center items-center flex">
               <CircularProgress color="secondary" />
             </div>
           ) : data?.data?.length ? (
-            data?.data?.map(({ name, id }) => (
-              <Accordion className="w-full" key={id}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1-content"
-                  id="panel1-header"
-                >
-                  {name}
-                </AccordionSummary>
-                <AccordionDetails className="!p-0">
-                  <PlayerList id={id} />
-                </AccordionDetails>
-              </Accordion>
-            ))
+            data?.data
+              ?.sort((a, b) => a.name.localeCompare(b.name))
+              .map(({ name, id }) => (
+                <Accordion className="w-full" key={id}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
+                  >
+                    {name}
+                  </AccordionSummary>
+                  <AccordionDetails className="!p-0">
+                    <PlayerList id={id} />
+                  </AccordionDetails>
+                </Accordion>
+              ))
           ) : (
             "No media found"
           )}
@@ -101,17 +103,19 @@ const PlayerList: React.FC<{ id: number }> = ({ id }) => {
           aria-label="simple table"
         >
           <TableBody>
-            {data?.data.map(({ name, id }) => (
-              <TableRow key={id}>
-                <TableCell
-                  component="th"
-                  scope="row"
-                  className="!py-2 !max-w-10"
-                >
-                  {name}
-                </TableCell>
-              </TableRow>
-            ))}
+            {data?.data
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map(({ name, id }) => (
+                <TableRow key={id}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    className="!py-2 !max-w-10"
+                  >
+                    {name}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       )}
