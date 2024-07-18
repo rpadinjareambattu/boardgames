@@ -6,6 +6,12 @@ import { useEffect } from "react";
 import { CircularProgress, Dialog } from "@mui/material";
 import { Tournament } from "@/types/tournament";
 import { useRouter } from "next/router";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
 
 const tabs = [
   { text: "matches", tab: "matches", hideFor: ["prediction"] },
@@ -17,15 +23,15 @@ const tabs = [
 // hide select based on tab
 const hideSelect = ["gallery", "teams"];
 
-interface GameList {
-  data: [
-    {
-      id: number;
-      name: string;
-      isActive: boolean;
-    }
-  ];
-}
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
 interface BannerProps {
   tournament?: Tournament;
   loading: boolean;
@@ -80,9 +86,16 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
+  };
+  const [openMore, setOpenMore] = React.useState(false);
+
+  const handleClickOpenMore = () => {
+    setOpenMore(true);
+  };
+  const handleCloseMore = () => {
+    setOpenMore(false);
   };
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const gameType = event.target.value;
@@ -143,6 +156,38 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
                 objectFit="contain"
               />
             </Dialog>
+            <BootstrapDialog
+              onClose={handleCloseMore}
+              aria-labelledby="customized-dialog-title"
+              open={openMore}
+            >
+              <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                {tournament?.name}
+              </DialogTitle>
+              <IconButton
+                aria-label="close"
+                onClick={handleCloseMore}
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <DialogContent dividers className="min-w-96">
+                <Typography gutterBottom>
+                  {tournament?.description?.split("\n").map((line, index) => (
+                    <span key={index}>
+                      {line}
+                      <br />
+                    </span>
+                  ))}
+                  {!tournament?.description && "No information found"}
+                </Typography>
+              </DialogContent>
+            </BootstrapDialog>
           </div>
           <div className="flex-auto flex flex-col">
             <h1 className="text-2xl font-mono text-white font-semibold drop-shadow max-md:text-base">
@@ -161,30 +206,39 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
                 {views} Views
               </p>
             </div>
-            {!loading && (
-              <select
-                onChange={handleChange}
-                ref={gameInput}
-                name="team"
-                defaultValue={game}
-                disabled={hideSelect.includes(String(tab))}
-                className="bg-gray-50 self-start capitalize border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 inline-block max-md:p-1 mt-1"
-              >
-                {tournament?.games?.length && tournament?.games?.length > 1 ? (
-                  <option value="all">All</option>
-                ) : null}
+            <div>
+              {!loading && (
+                <select
+                  onChange={handleChange}
+                  ref={gameInput}
+                  name="team"
+                  defaultValue={game}
+                  disabled={hideSelect.includes(String(tab))}
+                  className="bg-gray-50 self-start capitalize border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 inline-block max-md:p-1 mt-1"
+                >
+                  {tournament?.games?.length &&
+                  tournament?.games?.length > 1 ? (
+                    <option value="all">All</option>
+                  ) : null}
 
-                {tournament?.games?.map((t) => (
-                  <option key={t.id} value={t.name}>
-                    {t.name}
-                  </option>
-                ))}
-                {!tournament?.games?.length && (
-                  <option value={game}>{game}</option>
-                )}
-              </select>
-            )}
-            {loading && <CircularProgress size="2rem" />}
+                  {tournament?.games?.map((t) => (
+                    <option key={t.id} value={t.name}>
+                      {t.name}
+                    </option>
+                  ))}
+                  {!tournament?.games?.length && (
+                    <option value={game}>{game}</option>
+                  )}
+                </select>
+              )}
+              {loading && <CircularProgress size="2rem" />}
+              <span
+                className="cursor-pointer self-start flex-auto ml-5 text-white"
+                onClick={handleClickOpenMore}
+              >
+                More Info
+              </span>
+            </div>
           </div>
         </div>
         <div className="container px-6 max-w-6xl w-full pt-4 whitespace-nowrap overflow-auto min-h-9 max-md:min-h-7">

@@ -14,6 +14,7 @@ export interface TournamentListData {
 export interface Tournament {
   id: number;
   name: string;
+  description: string;
   isActive: boolean;
   startDate: string;
   endDate: string;
