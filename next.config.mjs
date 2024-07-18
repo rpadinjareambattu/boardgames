@@ -1,17 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    async redirects() {
-        return [
-          // Basic redirect
-          {
-            source: '/matches',
-            destination: '/',
-            permanent: true,
-          },
-        ]
-      },
       experimental: {
         missingSuspenseWithCSRBailout: false,
+      },
+      images: {
+        remotePatterns: [
+          {
+            protocol: process.env.NEXT_PUBLIC_IMAGE_PROTOCOL,
+            hostname: process.env.NEXT_PUBLIC_IMAGE_HOST,
+            port: process.env.NEXT_PUBLIC_IMAGE_PORT,
+            pathname: '/uploads/**',
+          },
+        ],
       },
 };
 

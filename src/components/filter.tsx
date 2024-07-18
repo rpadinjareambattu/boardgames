@@ -1,14 +1,13 @@
 "use client";
 
+import useApiService from "@/service/useApiService";
+import { TeamData } from "@/types/team";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-
-import { useRouter } from "next/navigation";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useState, useEffect, FormEvent, useRef } from "react";
+import { useRouter } from "next/router";
+import { useState, FormEvent, useRef } from "react";
 import { FaFilter } from "react-icons/fa";
-import useApiService from "./service/useApiService";
 
 const style = {
   position: "absolute" as "absolute",
@@ -21,37 +20,32 @@ const style = {
   boxShadow: 4,
   p: 3,
 };
-interface Team {
-  data: [
-    {
-      id: number;
-      attributes: {
-        name: string;
-      };
-    }
-  ];
-}
 
 export default function Filter() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const router = useRouter();
-
-  let date = searchParams.get("date") || "";
-  let team = searchParams.get("team") || "";
+  const { date, team, tournament } = router.query;
   const handleFilter = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    date = (event.currentTarget.elements.namedItem("date") as HTMLInputElement)
-      .value;
-    team = (event.currentTarget.elements.namedItem("team") as HTMLInputElement)
-      .value;
-    let query = date ? "?date=" + date + "&" : "?";
-    team ? (query += "team=" + team) : (query = query.replaceAll("&", ""));
-    router.push(`${pathname}` + query);
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          date: (
+            event.currentTarget.elements.namedItem("date") as HTMLInputElement
+          ).value,
+          team: (
+            event.currentTarget.elements.namedItem("team") as HTMLInputElement
+          ).value,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
     handleClose();
   };
   const textInput = useRef<HTMLInputElement>(null);
@@ -64,8 +58,9 @@ export default function Filter() {
       selectInput.current.value = "";
     }
   };
-  const { data, loading, error } = useApiService<Team>("teams");
-
+  const { data } = useApiService<TeamData>(
+    "teams?filters[v3tournaments][$eq]=" + tournament
+  );
   return (
     <div>
       <Button
@@ -102,9 +97,9 @@ export default function Filter() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option value="">All</option>
-                {data?.data.map((t) => (
+                {data?.data?.map((t) => (
                   <option key={t.id} value={t.id}>
-                    {t.attributes.name}
+                    {t.name}
                   </option>
                 ))}
               </select>
