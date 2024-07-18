@@ -40,8 +40,8 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
   }, [router.query]);
 
   const { data, loading } = useApiService<RoundData>(
-    "v3-rounds?queryType=matches&filters[gameType][name][$eq]=" +
-      game +
+    "v3-rounds?queryType=matches" +
+      (game === "all" ? "" : "&filters[gameType][name][$eq]=" + game) +
       "&filters[v_3_tournament][$eq]=" +
       tournament,
     game != ""
@@ -196,7 +196,8 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                           >
                                             <span
                                               className={
-                                                sMatch.teamAScore >= 2
+                                                sMatch.teamAScore >
+                                                sMatch.teamBScore
                                                   ? "text-green-700"
                                                   : ""
                                               }
@@ -214,7 +215,8 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                           >
                                             <span
                                               className={
-                                                sMatch.teamAScore >= 2
+                                                sMatch.teamAScore >
+                                                sMatch.teamBScore
                                                   ? "text-green-700"
                                                   : ""
                                               }
@@ -226,7 +228,8 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                             {" - "}
                                             <span
                                               className={
-                                                sMatch.teamBScore >= 2
+                                                sMatch.teamBScore >
+                                                sMatch.teamAScore
                                                   ? "text-green-700"
                                                   : ""
                                               }
@@ -242,7 +245,8 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                           >
                                             <span
                                               className={
-                                                sMatch.teamBScore >= 2
+                                                sMatch.teamBScore >
+                                                sMatch.teamAScore
                                                   ? "text-green-700"
                                                   : ""
                                               }

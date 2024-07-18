@@ -15,7 +15,7 @@ const tabs = [
   { text: "Gallery", tab: "gallery" },
 ];
 // hide select based on tab
-const hideSelect = ["leaderBoard", "gallery", "teams"];
+const hideSelect = ["gallery", "teams"];
 
 interface GameList {
   data: [
@@ -161,14 +161,19 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
                 {views} Views
               </p>
             </div>
-            {!loading && !hideSelect.includes(String(tab)) && (
+            {!loading && (
               <select
                 onChange={handleChange}
                 ref={gameInput}
                 name="team"
                 defaultValue={game}
+                disabled={hideSelect.includes(String(tab))}
                 className="bg-gray-50 self-start capitalize border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 inline-block max-md:p-1 mt-1"
               >
+                {tournament?.games?.length && tournament?.games?.length > 1 ? (
+                  <option value="all">All</option>
+                ) : null}
+
                 {tournament?.games?.map((t) => (
                   <option key={t.id} value={t.name}>
                     {t.name}

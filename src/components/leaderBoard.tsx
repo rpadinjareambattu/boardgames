@@ -51,7 +51,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
   );
 
   useEffect(() => {
-    if (teamData && !tableData.length && data) {
+    if (teamData && data) {
       if (data?.data[0]?.roundDetails?.length) {
         const dd: TableData[] = [];
         data?.data[0]?.roundDetails[0]?.players?.forEach(
@@ -68,6 +68,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
         );
         return setTableData([...tableData, ...dd]);
       } else {
+        setTableData([]);
         const dd: TableData[] = [];
         teamData.data.forEach((element) => {
           element.players.forEach(({ id, name }) => {
@@ -75,19 +76,25 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
               id,
               name: name,
               teamId: element.id,
-              points: calcTeamStat(id, "points", data),
-              played: calcTeamStat(id, "played", data),
-              won: calcTeamStat(id, "won", data),
-              lost: calcTeamStat(id, "lost", data),
+              points: calcTeamStat(id, "points", data, String(game)),
+              played: calcTeamStat(id, "played", data, String(game)),
+              won: calcTeamStat(id, "won", data, String(game)),
+              lost: calcTeamStat(id, "lost", data, String(game)),
             };
             dd.push(tt);
           });
         });
-        return setTableData([...tableData, ...dd]);
+        dd.sort((a, b) => {
+          if (b.points === a.points) {
+            return a.name.localeCompare(b.name);
+          }
+          return b.points - a.points;
+        });
+        return setTableData([...dd]);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamData, data]);
+  }, [teamData, data, game]);
   useEffect(() => {
     if (!tab && tournament) {
       router.push(
@@ -129,7 +136,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
             </div>
           ) : (
             <TableContainer component={Paper} className="justify-center flex">
-              {!loading && (
+              {!loading && data && (
                 <Table
                   sx={{
                     width: { xs: "100%", sm: "100%" },
@@ -181,6 +188,11 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                         return b.points - a.points;
                       })
                       .filter((a) => a.played !== 0)
+                      .concat(
+                        tableData.filter(
+                          (player) => player.played === 0 && player.points === 0
+                        )
+                      )
                       .map((team, i) => {
                         return (
                           <TableRow key={team.id}>
@@ -259,7 +271,8 @@ export default LeaderBoard;
 const calcTeamStat = (
   id: number,
   status: StatusType,
-  data: RoundData
+  data: RoundData,
+  filterGame: string
 ): number => {
   let played = 0;
   let won = 0;
@@ -267,6 +280,7 @@ const calcTeamStat = (
   let points = 0;
 
   data?.data.forEach((round) => {
+    if (round.gameType.name != filterGame && filterGame !== "all") return;
     round.matches?.forEach((match) => {
       let sMatchPoints =
         match.teamAScore > match.teamBScore

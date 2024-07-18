@@ -36,8 +36,8 @@ const PointsTable: React.FC<PageProps> = ({ name }) => {
   const [tableData, setTableData] = useState<TableData[]>([]);
 
   const { data, loading, error } = useApiService<RoundData>(
-    "v3-rounds?queryType=matches&filters[gameType][name][$eq]=" +
-      game +
+    "v3-rounds?queryType=matches" +
+      (game === "all" ? "" : "&filters[gameType][name][$eq]=" + game) +
       "&filters[v_3_tournament][$eq]=" +
       tournament,
     game != "" && tournament != ""
