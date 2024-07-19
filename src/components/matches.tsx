@@ -110,7 +110,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                     <TableCell className="!py-1" align="right">
                                       <span
                                         className={
-                                          match.teamAScore === 3
+                                          match.teamAScore > match.teamBScore
                                             ? "text-green-700"
                                             : ""
                                         }
@@ -121,7 +121,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                     <TableCell className="!py-1" align="center">
                                       <span
                                         className={
-                                          match.teamAScore === 3
+                                          match.teamAScore > match.teamBScore
                                             ? "text-green-700"
                                             : ""
                                         }
@@ -133,7 +133,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                       {" - "}
                                       <span
                                         className={
-                                          match.teamBScore === 3
+                                          match.teamBScore > match.teamAScore
                                             ? "text-green-700"
                                             : ""
                                         }
@@ -149,7 +149,7 @@ const Matches: React.FC<BannerProps> = ({ name }) => {
                                     >
                                       <span
                                         className={
-                                          match.teamBScore === 3
+                                          match.teamBScore > match.teamAScore
                                             ? "text-green-700"
                                             : ""
                                         }
