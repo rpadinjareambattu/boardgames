@@ -9,16 +9,19 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import Tooltip from "@mui/material/Tooltip";
+import { TiInfoOutline } from "react-icons/ti";
+import { useEffect, useRef, useState } from "react";
 import useApiService from "@/service/useApiService";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { TeamData } from "@/types/team";
 import { RoundData } from "@/types/round";
+import CustomModal, { CustomModalHandles } from "./customModal";
 
 interface TableData {
   id: number;
-  teamId?: number;
+  teamName?: string;
   name: string;
   points: number;
   played?: number;
@@ -35,6 +38,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
   const router = useRouter();
   const { game, tournament, tab } = router.query;
   const [tableData, setTableData] = useState<TableData[]>([]);
+  const modalRef = useRef<CustomModalHandles>(null);
 
   const { data, loading, error } = useApiService<RoundData>(
     "v3-rounds?" +
@@ -46,7 +50,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
     tournament != ""
   );
   const { data: teamData, loading: teamLoading } = useApiService<TeamData>(
-    `teams?filters[v3tournaments][$eq]=${tournament}&populate[players][fields][0]=name&fields[0]=id`,
+    `teams?filters[v3tournaments][$eq]=${tournament}&populate[players][fields][0]=name&fields[0]=id&fields[1]=name`,
     tournament != ""
   );
 
@@ -75,7 +79,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
             const tt: TableData = {
               id,
               name: name,
-              teamId: element.id,
+              teamName: element.name,
               points: calcTeamStat(id, "points", data, String(game)),
               played: calcTeamStat(id, "played", data, String(game)),
               won: calcTeamStat(id, "won", data, String(game)),
@@ -108,6 +112,11 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
+  const handleOpenModal = (title: string, description: string) => {
+    if (modalRef.current) {
+      modalRef.current.openModal(title, description);
+    }
+  };
 
   if (error) return <p>Error: {error.message}</p>;
 
@@ -172,10 +181,27 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                         </>
                       )}
                       <TableCell className="!py-1" align="center">
-                        <small>
-                          P<span className="max-md:hidden">oints</span>
-                          <span className="md:hidden">ts</span>
-                        </small>
+                        <Tooltip
+                          placement="top"
+                          title="Points will be updated once the match is concluded."
+                        >
+                          <small>
+                            P
+                            <span
+                              className="max-md:hidden relative"
+                              onClick={() =>
+                                handleOpenModal(
+                                  "Info",
+                                  "Points will be updated once the match is concluded."
+                                )
+                              }
+                            >
+                              oints
+                              <TiInfoOutline className="inline-block text-sm text-blue-700 ml-1 absolute m-auto top-0 bottom-0" />
+                            </span>
+                            <span className="md:hidden">ts</span>
+                          </small>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -208,7 +234,9 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                               scope="row"
                               className="!py-2"
                             >
-                              {team.name}
+                              <Tooltip placement="top" title={team.teamName}>
+                                <span>{team.name}</span>
+                              </Tooltip>
                             </TableCell>
                             {game != "prediction" && (
                               <>
@@ -262,6 +290,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
           )}
         </div>
       </main>
+      <CustomModal ref={modalRef} />
     </>
   );
 };
