@@ -42,7 +42,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
 
   const { data, loading, error } = useApiService<RoundData>(
     "v3-rounds?" +
-      (game === "prediction"
+      (game === "leaderBoard"
         ? "populate[roundDetails][populate][players][populate][players][fields]=name"
         : "queryType=matches") +
       "&filters[v_3_tournament][$eq]=" +
@@ -127,7 +127,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
       </Head>
       <main className="flex min-h-screen flex-col items-center max-md:text-sm">
         <div className="container flex flex-wrap max-w-6xl px-6 pb-5">
-          {game === "prediction" && !tableData.length && !loading ? (
+          {game === "leaderBoard" && !tableData.length && !loading ? (
             <div className="w-full p-8 bg-white border-2 rounded-lg">
               <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white md:text-3xl lg:text-4xl block">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
@@ -160,7 +160,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                       <TableCell className="!py-1">
                         <small>Name</small>
                       </TableCell>
-                      {game != "prediction" && (
+                      {game != "leaderBoard" && (
                         <>
                           <TableCell className="!py-1" align="center">
                             <small>
@@ -197,7 +197,9 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                               }
                             >
                               oints
-                              <TiInfoOutline className="inline-block text-sm text-blue-700 ml-1 absolute m-auto top-0 bottom-0" />
+                              {game != "leaderBoard" && (
+                                <TiInfoOutline className="inline-block text-sm text-blue-700 ml-1 absolute m-auto top-0 bottom-0" />
+                              )}
                             </span>
                             <span className="md:hidden">ts</span>
                           </small>
@@ -238,7 +240,7 @@ const LeaderBoard: React.FC<PageProps> = ({ name }) => {
                                 <span>{team.name}</span>
                               </Tooltip>
                             </TableCell>
-                            {game != "prediction" && (
+                            {game != "leaderBoard" && (
                               <>
                                 <TableCell
                                   component="th"

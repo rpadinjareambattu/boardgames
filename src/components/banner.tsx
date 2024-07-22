@@ -10,10 +10,10 @@ import { styled } from "@mui/material/styles";
 import CustomModal, { CustomModalHandles } from "./customModal";
 
 const tabs = [
-  { text: "matches", tab: "matches", hideFor: ["prediction"] },
-  { text: "points table", tab: "table", hideFor: ["prediction"] },
+  { text: "matches", tab: "matches", hideFor: ["leaderBoard"] },
+  { text: "points table", tab: "table", hideFor: ["leaderBoard"] },
   { text: "LeaderBoard", tab: "leaderBoard" },
-  { text: "Teams", tab: "teams", hideFor: ["prediction"] },
+  { text: "Teams", tab: "teams", hideFor: ["leaderBoard"] },
   { text: "Gallery", tab: "gallery" },
 ];
 // hide select based on tab
@@ -46,7 +46,7 @@ const Banner: React.FC<BannerProps> = ({ tournament, loading, views }) => {
         query: {
           ...router.query,
           tab:
-            tournament?.activeGame.name === "prediction"
+            tournament?.activeGame.name === "leaderBoard"
               ? "leaderBoard"
               : "matches",
         },
