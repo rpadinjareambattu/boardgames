@@ -103,42 +103,66 @@
         cellspacing="0"
         role="presentation"
         style="
-          background-color: #040b4f;
+          background-color: #87ee27;
           width: 100%;
           max-width: 600px;
           margin: auto;
         "
       >
+        {{#if secondaryImageUrl}}
         <tr>
           <td style="padding: 20px 0; text-align: center">
-            <!-- Logo Section -->
-            <img
-              src="https://shraddhagames.vercel.app/open-assessment-white-logo-01.png"
-              alt="Assessment Logo"
-              style="
-                width: 300px;
-                max-width: 100%;
-                display: block;
-                margin: auto;
-              "
-            />
+            <!-- Secondary Logo Section -->
+            <a
+              href="{{#if secondaryLinkUrl}}{{secondaryLinkUrl}}{{else}}https://www.opentrends.net{{/if}}"
+              target="_blank"
+            >
+              <img
+                src="{{secondaryImageUrl}}"
+                alt=""
+                style="
+                  width: 150px;
+                  max-width: 100%;
+                  display: block;
+                  margin: auto;
+                "
+              />
+            </a>
           </td>
         </tr>
+        {{/if}}
 
         <!-- Header Background Section -->
         <tr>
           <td
             style="
-              background-color: #1f2e78;
+              background-color: #ce2525;
               text-align: center;
               padding: 20px 0;
             "
           >
-            <!-- Company Logo -->
+            <!-- Primary Logo -->
+            {{#if primaryImageUrl}}
+            <a
+              href="{{#if primaryLinkUrl}}{{primaryLinkUrl}}{{else}}https://www.opentrends.net{{/if}}"
+              target="_blank"
+            >
+              <img
+                src="{{primaryImageUrl}}"
+                alt=""
+                style="
+                  width: 150px;
+                  max-width: 100%;
+                  display: block;
+                  margin: auto;
+                "
+              />
+            </a>
+            {{else}}
             <a href="https://www.opentrends.net" target="_blank">
               <img
                 src="https://shraddhagames.vercel.app/logo-Seidor-opentrends_negativo.png"
-                alt="Opentrends Logo"
+                alt=""
                 style="
                   width: 140px;
                   max-width: 100%;
@@ -147,6 +171,7 @@
                 "
               />
             </a>
+            {{/if}}
           </td>
         </tr>
       </table>
@@ -248,7 +273,7 @@
                   >
                     <tr>
                       <td align="{{this.textAlign}}">
-                        <p>{{this.text}}</p>
+                        <p>{{{this.text}}}</p>
                       </td>
                     </tr>
                   </table>
@@ -652,39 +677,19 @@
                                                         color: #445566;
                                                       "
                                                     >
-                                                      You received this email
-                                                      due to recent activity in
-                                                      one of our applications.
-                                                      If this email isn’t
-                                                      relevant to you or wasn’t
-                                                      intended for you, please
-                                                      disregard it.
-                                                    </div>
-                                                  </td>
-                                                </tr>
-                                                <tr>
-                                                  <td
-                                                    align="center"
-                                                    style="
-                                                      font-size: 0px;
-                                                      padding: 10px 25px;
-                                                      word-break: break-word;
-                                                    "
-                                                  >
-                                                    <div
-                                                      style="
-                                                        font-family: 'Helvetica Neue',
-                                                          Helvetica, Arial,
-                                                          sans-serif;
-                                                        font-size: 11px;
-                                                        font-weight: 400;
-                                                        line-height: 16px;
-                                                        text-align: center;
-                                                        color: #445566;
-                                                      "
-                                                    >
-                                                      &copy; SEIDOR Opentrends.
-                                                      All rights reserved.
+                                                      {{#if footerContent}}
+                                                      {{{footerContent}}}
+                                                      {{else}} You received this
+                                                      email due to recent
+                                                      activity in one of our
+                                                      applications. If this
+                                                      email isn’t relevant to
+                                                      you or wasn’t intended for
+                                                      you, please disregard it.
+                                                      <br />
+                                                      <br />&copy; SEIDOR
+                                                      Opentrends. All rights
+                                                      reserved. {{/if}}
                                                     </div>
                                                   </td>
                                                 </tr>
